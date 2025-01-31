@@ -147,7 +147,6 @@
                                 <a href="{{ url('register') }}" class="nav-link nav-item">Register</a>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
@@ -163,7 +162,6 @@
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
                         @endguest
                         <a href="" class="btn btn-primary py-2 px-4">Book A Table</a>
                     </div>
