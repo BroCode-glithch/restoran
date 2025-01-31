@@ -1,0 +1,15 @@
+# nixpacks.toml
+
+[build]
+  builder = "heroku/php"
+
+[env]
+  APP_KEY = "your-app-key"
+  APP_ENV = "production"
+  APP_DEBUG = "false"
+  APP_URL = "https://your-app-url.com"
+
+[[services]]
+  name = "web"
+  port = 80
+  command = "php artisan serve --host 0.0.0.0 --port 80"
