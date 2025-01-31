@@ -1,0 +1,9 @@
+/vendor
+/node_modules
+/storage
+/bootstrap/cache
+.env
+.env.example
+/.vscode
+/public/storage
+/database/*.sqlite
