@@ -22,7 +22,7 @@ class OrderPlacedNotification extends Notification
     {
         $channels = ['database'];
 
-        if (getSetting('notifications.email_enabled', '1') === '1' && !empty($notifiable->email)) {
+        if (getSetting('notifications.email_enabled', '1') === '1' && mailIsConfigured() && !empty($notifiable->email)) {
             $channels[] = 'mail';
         }
 
@@ -45,7 +45,10 @@ class OrderPlacedNotification extends Notification
 
     public function toMail($notifiable)
     {
+        $sender = mailIdentity('order');
+
         return (new MailMessage)
+            ->from($sender['address'], $sender['name'])
             ->subject('Order ' . $this->order->order_number . ' received')
             ->greeting('Hello ' . ($notifiable->name ?? 'there') . ',')
             ->line('Your order has been received and is now queued for processing.')

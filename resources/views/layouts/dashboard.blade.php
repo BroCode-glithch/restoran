@@ -34,38 +34,44 @@
     $logoUrl = mediaUrl(getSetting('branding.logo_url'), asset('assets/img/hero.png'));
 @endphp
 <div class="ops-shell">
-    @if($role !== 'customer')
-        <aside class="ops-sidebar">
-            <div class="ops-sidebar-brand p-4">
-                <div class="d-flex align-items-center gap-3">
-                    <img src="{{ $logoUrl }}" alt="{{ $businessName }}" style="width:52px;height:52px;object-fit:cover;" class="rounded-4">
-                    <div>
-                        <div class="fw-bold fs-5">{{ $businessName }}</div>
-                        <small class="text-muted">{{ roleLabel($role) }} workspace</small>
-                    </div>
+    <aside class="ops-sidebar">
+        <div class="ops-sidebar-brand p-4">
+            <div class="d-flex align-items-center gap-3">
+                <img src="{{ $logoUrl }}" alt="{{ $businessName }}" style="width:52px;height:52px;object-fit:cover;" class="rounded-4">
+                <div>
+                    <div class="fw-bold fs-5">{{ $businessName }}</div>
+                    <small class="text-muted">{{ roleLabel($role) }} workspace</small>
                 </div>
             </div>
 
-            <nav class="p-3">
-                @foreach($navItems as $item)
-                    <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route']) ? 'active' : '' }}">
+            @if($user)
+                <div class="ops-sidebar-summary mt-3 p-3 rounded-4">
+                    <small class="text-muted d-block mb-1">Signed in as</small>
+                    <div class="fw-semibold">{{ $user->name }}</div>
+                    <div class="small text-muted text-truncate">{{ $user->email }}</div>
+                </div>
+            @endif
+        </div>
+
+        <nav class="p-3">
+            @foreach($navItems as $item)
+                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                    <span class="ops-nav-icon">
                         <i class="{{ $item['icon'] }}"></i>
-                        <span>{{ $item['label'] }}</span>
-                    </a>
-                @endforeach
-            </nav>
-        </aside>
-    @endif
+                    </span>
+                    <span>{{ $item['label'] }}</span>
+                </a>
+            @endforeach
+        </nav>
+    </aside>
 
     <div class="ops-main">
         <header class="ops-topbar px-3 px-lg-4 py-3">
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    @if($role !== 'customer')
-                        <button type="button" class="btn btn-light d-lg-none" id="opsSidebarToggle">
-                            <i class="fa-solid fa-bars"></i>
-                        </button>
-                    @endif
+                    <button type="button" class="btn btn-light d-lg-none" id="opsSidebarToggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
                     <div>
                         <div class="text-uppercase small text-muted fw-semibold">{{ roleLabel($role) }}</div>
                         <h5 class="mb-0">{{ $businessName }}</h5>

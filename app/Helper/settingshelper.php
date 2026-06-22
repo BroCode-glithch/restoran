@@ -89,6 +89,44 @@ if (!function_exists('orderStatusNext')) {
     }
 }
 
+if (!function_exists('mailIsConfigured')) {
+    function mailIsConfigured()
+    {
+        $host = strtolower(trim((string) config('mail.mailers.smtp.host', '')));
+        $username = trim((string) config('mail.mailers.smtp.username', ''));
+        $password = trim((string) config('mail.mailers.smtp.password', ''));
+
+        return $host !== '' && $host !== 'mailhog' && $username !== '' && $password !== '';
+    }
+}
+
+if (!function_exists('mailIdentity')) {
+    function mailIdentity($context = 'general')
+    {
+        $baseAddress = trim((string) config('mail.from.address', 'info@dailydewtech.com.ng'));
+        $businessName = getSetting('branding.business_name', getSetting('site_title', config('app.name')));
+        $domain = Str::after($baseAddress, '@');
+        $context = strtolower(trim((string) $context));
+        $prefixes = config('foodops.mail_sender_prefixes', []);
+        $prefix = isset($prefixes[$context]) ? $prefixes[$context] : ($context !== '' ? Str::slug($context, '') : 'info');
+
+        if ($prefix === '') {
+            $prefix = 'info';
+        }
+
+        $address = filter_var($baseAddress, FILTER_VALIDATE_EMAIL) && !empty($domain)
+            ? $prefix . '@' . $domain
+            : $baseAddress;
+
+        $label = $context !== '' ? ucfirst(str_replace(['_', '-'], ' ', $context)) . ' Notifications' : 'Notifications';
+
+        return [
+            'address' => $address,
+            'name' => trim($label . ' | ' . $businessName),
+        ];
+    }
+}
+
 if (!function_exists('mediaUrl')) {
     function mediaUrl($path, $fallback = null)
     {

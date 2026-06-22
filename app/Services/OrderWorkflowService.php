@@ -83,7 +83,15 @@ class OrderWorkflowService
                 ],
             ]);
 
-            $this->notifyOrderPlaced($order, $customer);
+            try {
+                $this->notifyOrderPlaced($order, $customer);
+            } catch (\Throwable $e) {
+                logger()->warning('Order placed notification failed.', [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $order->load(['items', 'statusHistories']);
         });
@@ -125,7 +133,16 @@ class OrderWorkflowService
                 ],
             ]);
 
-            $this->notifyStatusUpdated($order, $actor, $note);
+            try {
+                $this->notifyStatusUpdated($order, $actor, $note);
+            } catch (\Throwable $e) {
+                logger()->warning('Order status notification failed.', [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'status' => $status,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $order->fresh(['items', 'statusHistories']);
         });

@@ -24,7 +24,7 @@ class OrderStatusUpdatedNotification extends Notification
     {
         $channels = ['database'];
 
-        if (getSetting('notifications.email_enabled', '1') === '1' && !empty($notifiable->email)) {
+        if (getSetting('notifications.email_enabled', '1') === '1' && mailIsConfigured() && !empty($notifiable->email)) {
             $channels[] = 'mail';
         }
 
@@ -48,7 +48,9 @@ class OrderStatusUpdatedNotification extends Notification
 
     public function toMail($notifiable)
     {
+        $sender = mailIdentity('order');
         $mail = (new MailMessage)
+            ->from($sender['address'], $sender['name'])
             ->subject('Order ' . $this->order->order_number . ' updated')
             ->greeting('Hello ' . ($notifiable->name ?? 'there') . ',')
             ->line('Your order status is now ' . orderStatusLabel($this->order->status) . '.')

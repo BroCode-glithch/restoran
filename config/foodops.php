@@ -90,6 +90,16 @@ return [
         'cancelled' => 'bg-danger text-white',
     ],
 
+    'mail_sender_prefixes' => [
+        'general' => 'info',
+        'notification' => 'notify',
+        'order' => 'order',
+        'orders' => 'order',
+        'account' => 'account',
+        'support' => 'support',
+        'system' => 'system',
+    ],
+
     'dashboard_navigation' => [
         'customer' => [
             ['label' => 'Overview', 'route' => 'customer.dashboard', 'icon' => 'fa-solid fa-gauge'],
