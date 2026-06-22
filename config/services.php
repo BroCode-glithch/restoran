@@ -30,4 +30,25 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'resend' => [
+        'key' => env('RESEND_KEY'),
+    ],
+
+    'twilio' => [
+        'sid' => env('TWILIO_SID'),
+        'token' => env('TWILIO_TOKEN'),
+        'from' => env('TWILIO_FROM'),
+    ],
+
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
+    'paystack' => [
+        'key' => env('PAYSTACK_KEY'),
+        'secret' => env('PAYSTACK_SECRET'),
+        'public' => env('PAYSTACK_PUBLIC_KEY'),
+    ],
+
 ];

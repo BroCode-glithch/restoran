@@ -7,7 +7,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Dynamic Title -->
+    <title>@yield('title', getSetting('site_title'))</title>
 
     <!-- Scripts -->
     {{--  <script src="{{ asset('assets/js/app.js') }}" defer></script>  --}}
@@ -61,8 +62,8 @@
             <!-- Navbar & Hero Start -->
             <div class="container-xxl position-relative p-0">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-                    <a href="" class="navbar-brand p-0">
-                        <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>Restoran</h1>
+                    <a href="{{ base_url() }}" class="navbar-brand p-0">
+                        <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>{{ getSetting('site_title') }}</h1>
                         <!-- <img src="img/logo.png" alt="Logo"> -->
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -82,7 +83,7 @@
                                     <a href="{{ url('/testimonial') }}" class="dropdown-item">Testimonial</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="{{ url('/contact') }}" class="nav-item nav-link">Contact</a>
                         </div>
 
                         @guest
@@ -111,7 +112,7 @@
                                 @csrf
                             </form>
                         @endguest
-                        <a href="" class="btn btn-primary py-2 px-4">Book A Table</a>
+                        <a href="{{ route('booking') }}" class="btn btn-primary py-2 px-4">Book A Table</a>
                     </div>
                 </nav>
 
@@ -121,7 +122,7 @@
                             <div class="col-lg-6 text-center text-lg-start">
                                 <h1 class="display-3 text-white animated slideInLeft">Enjoy Our<br>Delicious Meal</h1>
                                 <p class="text-white animated slideInLeft mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                                <a href="" class="btn btn-primary py-sm-3 px-sm-5 me-3 animated slideInLeft">Book A Table</a>
+                                <a href="{{ route('booking') }}" class="btn btn-primary py-sm-3 px-sm-5 me-3 animated slideInLeft">Book A Table</a>
                             </div>
                             <div class="col-lg-6 text-center text-lg-end overflow-hidden">
                                 <img class="img-fluid" src="{{ asset('assets/img/hero.png') }}" alt="">
@@ -152,9 +153,9 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Contact</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ getSetting('contact_address') }}</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>{{ getSetting('contact_phone') }}</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>{{ getSetting('contact_email') }}</p>
                     <div class="d-flex pt-2">
                         <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
@@ -183,11 +184,11 @@
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
+                        &copy; <a class="border-bottom" href="{{ base_url() }}">{{ getSetting('site_title') }}</a>, All Right Reserved.
 
                         <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a><br><br>
-                        Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                        Designed By <a class="border-bottom" href="https://dailydewtech.com.ng/" target="_blank">DailyDew Tech Innovations</a><br><br>
+                        {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <div class="footer-menu">

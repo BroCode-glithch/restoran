@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Menu | ' . getSetting('site_title'))
+
 @section('content')
 
         <!-- Menu Start -->

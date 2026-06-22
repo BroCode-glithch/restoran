@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Our Services | ' . getSetting('site_title'))
+
 @section('content')
 
 

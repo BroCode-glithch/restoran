@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['index']);
     }
 
     /**
@@ -25,16 +25,13 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $businessId = currentBusinessId();
+        $services = Service::where('business_id', $businessId)->orderBy('id', 'desc')->get();
 
-        $services = Service::all()->sortBy("desc");
+        $breakfasts = Menu::where('business_id', $businessId)->where("category", "Breakfast")->where("status", "Active")->get();
+        $lunches = Menu::where('business_id', $businessId)->where("category", "Lunch")->where("status", "Active")->get();
+        $dinners = Menu::where('business_id', $businessId)->where("category", "Dinner")->where("status", "Active")->get();
 
-
-        $breakfasts = Menu::where("category", "Breakfast")->where("status", "Active")->get();
-        $lunches = Menu::where("category", "Lunch")->where("status", "Active")->get();
-        $dinners = Menu::where("category", "Dinner")->where("status", "Active")->get();
-
-
-        toastr()->success('Logged in successfully!', 'Welcome!', ['timeOut' => 5000]);
         return view('home', compact('services', 'breakfasts', 'lunches', 'dinners'));
     }
 }

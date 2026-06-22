@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('titl', 'Our Team | ' . getSetting('site_title'))
+
 @section('content')
 
 <!-- Team Start -->

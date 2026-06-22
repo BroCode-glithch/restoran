@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Our Testimonials | ' . getSetting('site_title'))
+
 @section('content')
 
 <!-- Testimonial Start -->
