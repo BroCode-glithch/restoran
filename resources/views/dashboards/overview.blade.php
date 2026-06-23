@@ -56,7 +56,7 @@
                                 <small class="text-muted">{{ $card['subtitle'] }}</small>
                             </div>
                             @if(isset($card['price']))
-                                <div class="fw-bold text-primary">{{ number_format($card['price'], 2) }}</div>
+                                <div class="fw-bold text-primary">{{ moneyFormat($card['price']) }}</div>
                             @endif
                         </div>
                         <p class="text-muted mb-3">{{ $card['description'] }}</p>

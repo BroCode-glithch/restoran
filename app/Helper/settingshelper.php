@@ -89,6 +89,31 @@ if (!function_exists('orderStatusNext')) {
     }
 }
 
+if (!function_exists('dashboardBottomNavigation')) {
+    function dashboardBottomNavigation($role)
+    {
+        return app(RoleManager::class)->bottomNavigationFor($role);
+    }
+}
+
+if (!function_exists('moneyFormat')) {
+    function moneyFormat($amount, $currency = null)
+    {
+        $currency = strtoupper(trim((string) ($currency ?: getSetting('operations.currency', 'NGN'))));
+
+        return number_format((float) $amount, 2) . ' ' . $currency;
+    }
+}
+
+// helper for getCurrencies from the foodops.php config file
+if (!function_exists('getCurrencies')) {
+    function getCurrencies()
+    {
+        return config('foodops.currency_symbols', []);
+    }
+}
+
+
 if (!function_exists('mailIsConfigured')) {
     function mailIsConfigured()
     {

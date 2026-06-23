@@ -8,7 +8,7 @@
         <div class="col-lg-8">
             <div class="badge bg-white text-dark px-3 py-2 rounded-pill mb-3">Cart and Checkout</div>
             <h1 class="fw-bold mb-2">Review your order and submit checkout.</h1>
-            <p class="mb-0 text-white-50">Keep pickup and delivery details updated before placing the order.</p>
+            <p class="mb-0 text-white-50">Keep pickup and delivery details updated, then complete a demo payment before placing the order.</p>
         </div>
         <div class="col-lg-4 text-lg-end">
             <a href="{{ route('catalog.index') }}" class="btn btn-outline-light btn-lg me-2">Continue Shopping</a>
@@ -63,8 +63,8 @@
                                         <button class="btn btn-light" type="submit"><i class="fa-solid fa-arrows-rotate"></i></button>
                                     </form>
                                 </td>
-                                <td>{{ number_format($item['price'], 2) }} {{ getSetting('operations.currency', 'NGN') }}</td>
-                                <td class="fw-bold">{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                                <td>{{ moneyFormat($item['price']) }}</td>
+                                <td class="fw-bold">{{ moneyFormat($item['price'] * $item['quantity']) }}</td>
                                 <td>
                                     <form action="{{ route('cart.remove', $item['product_id']) }}" method="POST">
                                         @csrf
@@ -87,10 +87,14 @@
     <div class="col-lg-4">
         <div class="ops-card p-4 mb-4">
             <h4 class="mb-3">Order Summary</h4>
-            <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>{{ number_format($subtotal, 2) }}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Delivery Fee</span><strong>{{ number_format($deliveryFee, 2) }}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>{{ moneyFormat($subtotal) }}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Delivery Fee</span><strong>{{ moneyFormat($deliveryFee) }}</strong></div>
             <hr>
-            <div class="d-flex justify-content-between fs-5"><span>Total</span><strong>{{ number_format($total, 2) }}</strong></div>
+            <div class="d-flex justify-content-between fs-5"><span>Total</span><strong>{{ moneyFormat($total) }}</strong></div>
+            <div class="alert alert-light border-0 mt-3 mb-0">
+                <div class="fw-semibold mb-1">Payment ready</div>
+                <div class="small text-muted">Choose a payment method below to simulate the checkout flow.</div>
+            </div>
         </div>
 
         <div class="ops-card p-4">
@@ -106,7 +110,19 @@
                 </select>
                 <textarea name="delivery_address" class="form-control" rows="3" placeholder="Delivery address if needed">{{ old('delivery_address') }}</textarea>
                 <textarea name="notes" class="form-control" rows="3" placeholder="Special instructions">{{ old('notes') }}</textarea>
-                <button type="submit" class="btn btn-primary btn-lg">Place Order</button>
+
+                <div class="border rounded-4 p-3 bg-light">
+                    <div class="fw-bold mb-2">Payment method</div>
+                    <select name="payment_method" class="form-select mb-2" required>
+                        <option value="demo_card" {{ old('payment_method', 'demo_card') === 'demo_card' ? 'selected' : '' }}>Demo card payment</option>
+                        <option value="bank_transfer" {{ old('payment_method') === 'bank_transfer' ? 'selected' : '' }}>Bank transfer</option>
+                        <option value="cash_on_delivery" {{ old('payment_method') === 'cash_on_delivery' ? 'selected' : '' }}>Cash on delivery / pickup</option>
+                    </select>
+                    <input type="text" name="payment_reference" class="form-control" placeholder="Payment reference (optional)" value="{{ old('payment_reference') }}">
+                    <div class="small text-muted mt-2">Demo card payment marks the order as paid for testing the flow.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">Pay {{ moneyFormat($total) }} and Place Order</button>
             </form>
         </div>
     </div>

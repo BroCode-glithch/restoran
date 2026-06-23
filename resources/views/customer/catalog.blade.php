@@ -44,7 +44,7 @@
                                     <h5 class="mb-1">{{ $product->name }}</h5>
                                     <small class="text-muted">{{ $product->type }} @if($product->preparation_time_minutes) - {{ $product->preparation_time_minutes }} mins @endif</small>
                                 </div>
-                                <div class="fw-bold text-primary">{{ number_format($product->price, 2) }} {{ getSetting('operations.currency', 'NGN') }}</div>
+                                <div class="fw-bold text-primary">{{ moneyFormat($product->price) }}</div>
                             </div>
                             <p class="text-muted">{{ $product->description }}</p>
                             <form action="{{ route('catalog.add', $product) }}" method="POST" class="d-flex gap-2">

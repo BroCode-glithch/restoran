@@ -54,11 +54,26 @@
 
     <div class="col-lg-8">
         <div class="ops-card p-4">
-            <h4 class="mb-3">Products</h4>
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                <div>
+                    <h4 class="mb-1">Products</h4>
+                    <p class="text-muted mb-0">Use the checkboxes to activate or hide items for today.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button form="bulk-products-form" name="availability_action" value="activate" type="submit" class="btn btn-success btn-sm">Mark Available</button>
+                    <button form="bulk-products-form" name="availability_action" value="hide" type="submit" class="btn btn-outline-secondary btn-sm">Hide Selected</button>
+                </div>
+            </div>
+
+            <form id="bulk-products-form" action="{{ route('admin.products.bulk-availability') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+
             <div class="table-responsive">
                 <table class="table align-middle ops-table">
                     <thead>
                         <tr>
+                            <th style="width:44px;"></th>
                             <th>Product</th>
                             <th>Category</th>
                             <th>Type</th>
@@ -71,6 +86,9 @@
                         @forelse($products as $product)
                             <tr>
                                 <td>
+                                    <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" form="bulk-products-form" class="form-check-input">
+                                </td>
+                                <td>
                                     <div class="d-flex align-items-center gap-3">
                                         <img src="{{ mediaUrl($product->image, asset('assets/img/menu-1.jpg')) }}" alt="{{ $product->name }}" style="width:62px;height:62px;object-fit:cover;" class="rounded-3">
                                         <div>
@@ -81,7 +99,7 @@
                                 </td>
                                 <td>{{ optional($product->category)->name }}</td>
                                 <td>{{ ucfirst($product->type) }}</td>
-                                <td>{{ number_format($product->price, 2) }}</td>
+                                <td>{{ moneyFormat($product->price) }}</td>
                                 <td>
                                     <span class="badge {{ $product->availability ? 'bg-success' : 'bg-secondary' }}">{{ $product->availability ? 'Available' : 'Hidden' }}</span>
                                 </td>
@@ -95,7 +113,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="text-center text-muted py-5">No products found.</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted py-5">No products found.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

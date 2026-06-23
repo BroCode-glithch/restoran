@@ -20,16 +20,17 @@
 <div class="ops-card p-4">
     <div class="table-responsive">
         <table class="table align-middle ops-table">
-            <thead>
-                <tr>
-                    <th>Order</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Delivery</th>
-                    <th>Total</th>
-                    <th>Updated</th>
-                    <th></th>
-                </tr>
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Delivery</th>
+                            <th>Total</th>
+                            <th>Updated</th>
+                            <th></th>
+                        </tr>
             </thead>
             <tbody>
                 @forelse($orders as $order)
@@ -40,8 +41,12 @@
                             <small class="text-muted">{{ $order->customer_phone }}</small>
                         </td>
                         <td><span class="badge {{ orderStatusBadge($order->status) }}">{{ orderStatusLabel($order->status) }}</span></td>
+                        <td>
+                            <div class="fw-semibold">{{ ucfirst(str_replace('_', ' ', $order->payment_status)) }}</div>
+                            <small class="text-muted">{{ ucfirst(str_replace('_', ' ', $order->payment_method ?: 'demo_card')) }}</small>
+                        </td>
                         <td>{{ ucfirst($order->delivery_type) }}</td>
-                        <td class="fw-bold">{{ number_format($order->total, 2) }} {{ $order->currency }}</td>
+                        <td class="fw-bold">{{ moneyFormat($order->total, $order->currency) }}</td>
                         <td>{{ optional($order->updated_at)->diffForHumans() }}</td>
                         <td class="text-end">
                             <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-primary btn-sm">View</a>
@@ -71,7 +76,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-5">No orders found.</td>
+                        <td colspan="8" class="text-center text-muted py-5">No orders found.</td>
                     </tr>
                 @endforelse
             </tbody>

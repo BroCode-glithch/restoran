@@ -8,6 +8,8 @@ use App\Providers\RouteServiceProvider;
 use App\Services\RoleManager;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -39,6 +41,13 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    public function showLoginForm(Request $request)
+    {
+        $this->storeIntendedRoute($request);
+
+        return view('auth.login');
+    }
+
     /**
      * Display toast after successful login.
      *
@@ -59,6 +68,46 @@ class LoginController extends Controller
 
         toastr()->success('Logged in successfully!', 'Welcome!', ['timeOut' => 5000]);
 
+        $intendedRoute = $this->pullIntendedRoute($user);
+
+        if ($intendedRoute) {
+            return redirect()->route($intendedRoute);
+        }
+
         return redirect()->route(app(RoleManager::class)->dashboardRoute($user->role ?: 'customer'));
+    }
+
+    protected function storeIntendedRoute(Request $request)
+    {
+        $nextRoute = $request->query('next');
+
+        if (!$nextRoute) {
+            return;
+        }
+
+        if (!Route::has($nextRoute)) {
+            return;
+        }
+
+        if (!Str::startsWith($nextRoute, ['catalog.', 'cart.', 'orders.', 'customer.'])) {
+            return;
+        }
+
+        session(['foodops.post_auth_route' => $nextRoute]);
+    }
+
+    protected function pullIntendedRoute($user)
+    {
+        $nextRoute = session()->pull('foodops.post_auth_route');
+
+        if (!$nextRoute) {
+            return null;
+        }
+
+        if (!$user || !$user->isCustomer()) {
+            return null;
+        }
+
+        return Route::has($nextRoute) ? $nextRoute : null;
     }
 }

@@ -10,7 +10,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -42,6 +44,13 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function showRegistrationForm(Request $request)
+    {
+        $this->storeIntendedRoute($request);
+
+        return view('auth.register');
     }
 
     /**
@@ -98,6 +107,46 @@ class RegisterController extends Controller
 
         toastr()->success('Registration successful! You can now log in.', 'Welcome!', ['timeOut' => 5000]);
 
+        $intendedRoute = $this->pullIntendedRoute($user);
+
+        if ($intendedRoute) {
+            return redirect()->route($intendedRoute);
+        }
+
         return redirect()->route(app(RoleManager::class)->dashboardRoute($user->role ?: 'customer'));
+    }
+
+    protected function storeIntendedRoute(Request $request)
+    {
+        $nextRoute = $request->query('next');
+
+        if (!$nextRoute) {
+            return;
+        }
+
+        if (!Route::has($nextRoute)) {
+            return;
+        }
+
+        if (!Str::startsWith($nextRoute, ['catalog.', 'cart.', 'orders.', 'customer.'])) {
+            return;
+        }
+
+        session(['foodops.post_auth_route' => $nextRoute]);
+    }
+
+    protected function pullIntendedRoute($user)
+    {
+        $nextRoute = session()->pull('foodops.post_auth_route');
+
+        if (!$nextRoute) {
+            return null;
+        }
+
+        if (!$user || !$user->isCustomer()) {
+            return null;
+        }
+
+        return Route::has($nextRoute) ? $nextRoute : null;
     }
 }

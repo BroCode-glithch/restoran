@@ -46,7 +46,19 @@
     <div class="ops-setting-card p-4">
         <h4 class="mb-3">Operations</h4>
         <div class="row g-3">
-            <div class="col-md-4"><input type="text" name="settings[operations.currency]" class="form-control" placeholder="Currency" value="{{ old('settings.operations.currency', $settings['operations.currency'] ?? 'NGN') }}"></div>
+            {{-- A currency Div with dropdown of all currencies --}}
+            <div class="col-md-4">
+                <select name="settings[operations.currency]" class="form-select">
+
+                    @foreach (getCurrencies() as $code => $symbol)
+                        <option value="{{ $code }}"
+                            {{ ($settings['operations.currency'] ?? 'NGN') === $code ? 'selected' : '' }}>
+                            {{ $code }} ({{ $symbol }})
+                        </option>
+                    @endforeach
+
+                </select>
+            </div>
             <div class="col-md-4"><input type="number" step="0.01" name="settings[operations.delivery_fee]" class="form-control" placeholder="Delivery fee" value="{{ old('settings.operations.delivery_fee', $settings['operations.delivery_fee'] ?? '0') }}"></div>
             <div class="col-md-4"><input type="text" name="settings[operations.business_hours]" class="form-control" placeholder="Business hours" value="{{ old('settings.operations.business_hours', $settings['operations.business_hours'] ?? '') }}"></div>
             <div class="col-md-6 form-check ps-5">

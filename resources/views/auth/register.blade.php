@@ -13,6 +13,14 @@
     </p>
 </div>
 
+<div class="vstack gap-3 mb-4">
+    <button type="button" class="btn auth-social-btn w-100" disabled aria-disabled="true">
+        <i class="fa-brands fa-google text-danger"></i>
+        Continue with Google
+    </button>
+    <div class="auth-divider"><span>or use your details</span></div>
+</div>
+
 <form method="POST" action="{{ route('register') }}" class="vstack gap-3">
     @csrf
 
@@ -86,7 +94,7 @@
 
     <div class="text-center pt-2">
         <span class="auth-note">Already have an account?</span>
-        <a href="{{ route('login') }}" class="auth-link ms-1">Sign in</a>
+        <a href="{{ route('login', request()->only('next')) }}" class="auth-link ms-1">Sign in</a>
     </div>
 </form>
 @endsection

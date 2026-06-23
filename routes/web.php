@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware('role:manager')->group(function () {
         Route::resource('products', ProductController::class)->except(['show', 'create']);
+        Route::post('products/bulk-availability', [ProductController::class, 'bulkAvailability'])->name('products.bulk-availability');
         Route::resource('categories', CategoryController::class)->except(['show', 'create']);
 
         Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');

@@ -100,7 +100,20 @@ class RoleManager
 
     public function customerBottomNavigation()
     {
-        return config('foodops.customer_bottom_navigation', []);
+        return $this->bottomNavigationFor('customer');
+    }
+
+    public function bottomNavigationFor($role)
+    {
+        $configured = config('foodops.dashboard_bottom_navigation.' . $role, []);
+
+        if (!empty($configured)) {
+            return $configured;
+        }
+
+        $navigation = $this->navigationFor($role);
+
+        return array_slice($navigation, 0, 4);
     }
 
     public function statusLabel($status)

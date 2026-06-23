@@ -108,6 +108,38 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index');
     }
 
+    public function bulkAvailability(Request $request)
+    {
+        $data = $request->validate([
+            'product_ids' => ['required', 'array', 'min:1'],
+            'product_ids.*' => ['integer'],
+            'availability_action' => ['required', 'in:activate,hide'],
+        ]);
+
+        $availability = $data['availability_action'] === 'activate';
+
+        Product::query()
+            ->where('business_id', currentBusinessId())
+            ->whereIn('id', $data['product_ids'])
+            ->update(['availability' => $availability]);
+
+        SystemLog::create([
+            'business_id' => currentBusinessId(),
+            'actor_user_id' => auth()->id(),
+            'level' => 'info',
+            'category' => 'products',
+            'message' => ($availability ? 'Activated' : 'Hidden') . ' multiple products from the bulk menu action.',
+        ]);
+
+        toastr()->success(
+            $availability ? 'Selected products are now available.' : 'Selected products are now hidden.',
+            'Bulk update',
+            ['timeOut' => 3000]
+        );
+
+        return redirect()->route('admin.products.index');
+    }
+
     protected function validatePayload(Request $request, $ignoreId = null)
     {
         return $request->validate([

@@ -8,7 +8,7 @@
         <div class="col-lg-8">
             <div class="badge bg-white text-dark px-3 py-2 rounded-pill mb-3">Order {{ $order->order_number }}</div>
             <h1 class="fw-bold mb-2">{{ orderStatusLabel($order->status) }}</h1>
-            <p class="mb-0 text-white-50">{{ $order->customer_name }} - {{ ucfirst($order->delivery_type) }} - {{ number_format($order->total, 2) }} {{ $order->currency }}</p>
+            <p class="mb-0 text-white-50">{{ $order->customer_name }} - {{ ucfirst($order->delivery_type) }} - {{ moneyFormat($order->total, $order->currency) }}</p>
         </div>
         <div class="col-lg-4 text-lg-end">
             <a href="{{ route('orders.index') }}" class="btn btn-outline-light btn-lg">Back to Orders</a>
@@ -35,8 +35,8 @@
                             <tr>
                                 <td>{{ $item->product_name }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td>{{ number_format($item->unit_price, 2) }}</td>
-                                <td class="fw-bold">{{ number_format($item->total_price, 2) }}</td>
+                                <td>{{ moneyFormat($item->unit_price, $order->currency) }}</td>
+                                <td class="fw-bold">{{ moneyFormat($item->total_price, $order->currency) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -74,11 +74,25 @@
 
         <div class="ops-card p-4 mb-4">
             <h4 class="mb-3">Order Summary</h4>
-            <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>{{ number_format($order->subtotal, 2) }}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Delivery Fee</span><strong>{{ number_format($order->delivery_fee, 2) }}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Discount</span><strong>{{ number_format($order->discount, 2) }}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>{{ moneyFormat($order->subtotal, $order->currency) }}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Delivery Fee</span><strong>{{ moneyFormat($order->delivery_fee, $order->currency) }}</strong></div>
+            <div class="d-flex justify-content-between mb-2"><span>Discount</span><strong>{{ moneyFormat($order->discount, $order->currency) }}</strong></div>
             <hr>
-            <div class="d-flex justify-content-between fs-5"><span>Total</span><strong>{{ number_format($order->total, 2) }}</strong></div>
+            <div class="d-flex justify-content-between fs-5"><span>Total</span><strong>{{ moneyFormat($order->total, $order->currency) }}</strong></div>
+            <div class="mt-3 small text-muted">
+                Payment method:
+                <span class="fw-semibold text-dark">{{ ucfirst(str_replace('_', ' ', $order->payment_method ?: 'demo_card')) }}</span>
+            </div>
+            <div class="small text-muted">
+                Payment status:
+                <span class="fw-semibold text-dark">{{ ucfirst($order->payment_status) }}</span>
+            </div>
+            @if($order->payment_reference)
+                <div class="small text-muted">
+                    Reference:
+                    <span class="fw-semibold text-dark">{{ $order->payment_reference }}</span>
+                </div>
+            @endif
         </div>
 
         @if(auth()->user()->canAccessRole('staff'))

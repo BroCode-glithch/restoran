@@ -19,6 +19,14 @@ class OrderWorkflowService
         return DB::transaction(function () use ($payload, $cartItems, $customer) {
             $businessId = app(BusinessContext::class)->currentId();
             $subtotal = 0;
+            $paymentMethod = isset($payload['payment_method']) ? $payload['payment_method'] : 'demo_card';
+            $paymentMethod = in_array($paymentMethod, ['demo_card', 'bank_transfer', 'cash_on_delivery'], true)
+                ? $paymentMethod
+                : 'demo_card';
+            $isDemoPaid = $paymentMethod === 'demo_card';
+            $paymentReference = isset($payload['payment_reference']) && trim((string) $payload['payment_reference']) !== ''
+                ? trim((string) $payload['payment_reference'])
+                : ($isDemoPaid ? 'DEMO-' . Str::upper(Str::random(8)) : null);
 
             foreach ($cartItems as $item) {
                 $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
@@ -37,7 +45,8 @@ class OrderWorkflowService
                 'customer_phone' => $payload['customer_phone'],
                 'delivery_type' => $payload['delivery_type'],
                 'status' => 'placed',
-                'payment_status' => 'pending',
+                'payment_status' => $isDemoPaid ? 'paid' : 'pending',
+                'payment_method' => $paymentMethod,
                 'currency' => getSetting('operations.currency', 'NGN'),
                 'subtotal' => $subtotal,
                 'delivery_fee' => $deliveryFee,
@@ -46,7 +55,7 @@ class OrderWorkflowService
                 'total' => max(0, $subtotal + $deliveryFee + (isset($payload['tax']) ? (float) $payload['tax'] : 0) - (isset($payload['discount']) ? (float) $payload['discount'] : 0)),
                 'delivery_address' => isset($payload['delivery_address']) ? $payload['delivery_address'] : null,
                 'notes' => isset($payload['notes']) ? $payload['notes'] : null,
-                'payment_reference' => isset($payload['payment_reference']) ? $payload['payment_reference'] : null,
+                'payment_reference' => $paymentReference,
                 'placed_at' => now(),
             ]);
 

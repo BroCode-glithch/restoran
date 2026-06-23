@@ -66,13 +66,13 @@ class DashboardController extends Controller
                     'description' => 'Track your latest order activity and status changes.',
                     'columns' => ['Order', 'Status', 'Total', 'Updated'],
                     'rows' => $orders->map(function ($order) {
-                        return [
-                            $order->order_number,
-                            '<span class="badge ' . orderStatusBadge($order->status) . '">' . orderStatusLabel($order->status) . '</span>',
-                            number_format($order->total, 2) . ' ' . $order->currency,
-                            optional($order->updated_at)->diffForHumans(),
-                        ];
-                    })->toArray(),
+                return [
+                    $order->order_number,
+                    '<span class="badge ' . orderStatusBadge($order->status) . '">' . orderStatusLabel($order->status) . '</span>',
+                    moneyFormat($order->total, $order->currency),
+                    optional($order->updated_at)->diffForHumans(),
+                ];
+            })->toArray(),
                     'empty' => 'No orders yet. Start by browsing the menu.',
                     'action_route' => 'orders.index',
                     'action_label' => 'View All Orders',
@@ -226,7 +226,7 @@ class DashboardController extends Controller
         $revenue = (clone $orders)->where('status', 'completed')->whereDate('updated_at', today())->sum('total');
 
         return [
-            ['label' => 'Revenue Today', 'value' => number_format($revenue, 2), 'note' => 'Completed orders', 'icon' => 'fa-solid fa-naira-sign'],
+            ['label' => 'Revenue Today', 'value' => moneyFormat($revenue), 'note' => 'Completed orders', 'icon' => 'fa-solid fa-naira-sign'],
             ['label' => 'Orders Today', 'value' => (clone $orders)->whereDate('created_at', today())->count(), 'note' => 'Current throughput', 'icon' => 'fa-solid fa-chart-line'],
             ['label' => 'Visible Products', 'value' => Product::query()->where('business_id', currentBusinessId())->where('availability', true)->count(), 'note' => 'Menu visibility', 'icon' => 'fa-solid fa-utensils'],
             ['label' => 'Active Staff', 'value' => User::query()->where('business_id', currentBusinessId())->whereIn('role', ['staff', 'kitchen_staff'])->count(), 'note' => 'Shift coverage', 'icon' => 'fa-solid fa-users'],
@@ -345,14 +345,14 @@ class DashboardController extends Controller
     protected function mapOrders($orders)
     {
         return $orders->map(function ($order) {
-            return [
-                $order->order_number,
-                $order->customer_name,
-                '<span class="badge ' . orderStatusBadge($order->status) . '">' . orderStatusLabel($order->status) . '</span>',
-                ucfirst($order->delivery_type),
-                number_format($order->total, 2) . ' ' . $order->currency,
-                optional($order->updated_at)->diffForHumans(),
-            ];
-        })->toArray();
+                return [
+                    $order->order_number,
+                    $order->customer_name,
+                    '<span class="badge ' . orderStatusBadge($order->status) . '">' . orderStatusLabel($order->status) . '</span>',
+                    ucfirst($order->delivery_type),
+                    moneyFormat($order->total, $order->currency),
+                    optional($order->updated_at)->diffForHumans(),
+                ];
+            })->toArray();
     }
 }

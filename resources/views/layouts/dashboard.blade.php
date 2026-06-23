@@ -21,6 +21,40 @@
         body.ops-body {
             font-family: {{ getSetting('branding.font_family', '"Nunito", sans-serif') }};
         }
+
+        .ops-currency-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(254, 161, 22, 0.12);
+            color: var(--ops-primary);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
+        .ops-sidebar-brand-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .ops-sidebar-close {
+            border: 0;
+            background: transparent;
+        }
+
+        .ops-sidebar nav a .nav-label {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ops-topbar h5 {
+            line-height: 1.15;
+        }
     </style>
 </head>
 <body class="ops-body">
@@ -28,20 +62,29 @@
     $user = auth()->user();
     $role = $user ? $user->role : 'customer';
     $navItems = dashboardNavigation($role);
-    $bottomNav = customerBottomNavigation();
+    $bottomNav = dashboardBottomNavigation($role);
     $unreadNotifications = $user ? $user->unreadNotifications()->count() : 0;
     $businessName = getSetting('branding.business_name', getSetting('site_title', config('app.name')));
+    $currency = getSetting('operations.currency', 'NGN');
     $logoUrl = mediaUrl(getSetting('branding.logo_url'), asset('assets/img/hero.png'));
 @endphp
 <div class="ops-shell">
+    <div class="ops-sidebar-backdrop d-lg-none" id="opsSidebarBackdrop"></div>
+
     <aside class="ops-sidebar">
         <div class="ops-sidebar-brand p-4">
-            <div class="d-flex align-items-center gap-3">
-                <img src="{{ $logoUrl }}" alt="{{ $businessName }}" style="width:52px;height:52px;object-fit:cover;" class="rounded-4">
-                <div>
-                    <div class="fw-bold fs-5">{{ $businessName }}</div>
-                    <small class="text-muted">{{ roleLabel($role) }} workspace</small>
+            <div class="ops-sidebar-brand-top">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ $logoUrl }}" alt="{{ $businessName }}" style="width:52px;height:52px;object-fit:cover;" class="rounded-4">
+                    <div>
+                        <div class="fw-bold fs-5">{{ $businessName }}</div>
+                        <small class="text-muted">{{ roleLabel($role) }} workspace</small>
+                    </div>
                 </div>
+
+                <button type="button" class="btn btn-light ops-sidebar-close d-lg-none" id="opsSidebarClose" aria-label="Close navigation">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
             @if($user)
@@ -59,7 +102,7 @@
                     <span class="ops-nav-icon">
                         <i class="{{ $item['icon'] }}"></i>
                     </span>
-                    <span>{{ $item['label'] }}</span>
+                    <span class="nav-label">{{ $item['label'] }}</span>
                 </a>
             @endforeach
         </nav>
@@ -69,12 +112,15 @@
         <header class="ops-topbar px-3 px-lg-4 py-3">
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-light d-lg-none" id="opsSidebarToggle">
+                    <button type="button" class="btn btn-light d-lg-none" id="opsSidebarToggle" aria-label="Open navigation">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                     <div>
                         <div class="text-uppercase small text-muted fw-semibold">{{ roleLabel($role) }}</div>
-                        <h5 class="mb-0">{{ $businessName }}</h5>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <h5 class="mb-0">{{ $businessName }}</h5>
+                            <span class="ops-currency-chip">{{ $currency }}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -133,7 +179,7 @@
         </main>
     </div>
 
-    @if($role === 'customer')
+    @if(!empty($bottomNav))
         <nav class="ops-bottom-nav">
             @foreach($bottomNav as $item)
                 <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route']) ? 'active' : '' }}">
@@ -148,12 +194,39 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const toggle = document.getElementById('opsSidebarToggle');
-    if (toggle) {
-        toggle.addEventListener('click', function () {
-            document.body.classList.toggle('sidebar-open');
+    (function () {
+        var body = document.body;
+        var toggle = document.getElementById('opsSidebarToggle');
+        var close = document.getElementById('opsSidebarClose');
+        var backdrop = document.getElementById('opsSidebarBackdrop');
+        var sidebarLinks = document.querySelectorAll('.ops-sidebar nav a, .ops-bottom-nav a');
+
+        function closeSidebar() {
+            body.classList.remove('sidebar-open');
+        }
+
+        if (toggle) {
+            toggle.addEventListener('click', function () {
+                body.classList.toggle('sidebar-open');
+            });
+        }
+
+        if (close) {
+            close.addEventListener('click', closeSidebar);
+        }
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeSidebar);
+        }
+
+        Array.prototype.forEach.call(sidebarLinks, function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth < 992) {
+                    closeSidebar();
+                }
+            });
         });
-    }
+    }());
 </script>
 @stack('scripts')
 </body>

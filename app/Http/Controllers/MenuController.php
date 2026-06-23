@@ -2,13 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Menu;
 
 class MenuController extends Controller
 {
-    //
     public function index()
     {
-        return view('menu');
+        $businessId = currentBusinessId();
+
+        $breakfasts = Menu::where(
+            'business_id', $businessId)
+            ->where('category', 'Breakfast')
+            ->where('status', 'Active')->get();
+        $lunches = Menu::where(
+            'business_id', $businessId)
+            ->where('category', 'Lunch')
+            ->where('status', 'Active')->get();
+        $dinners = Menu::where(
+            'business_id', $businessId)
+            ->where('category', 'Dinner')
+            ->where('status', 'Active')->get();
+
+        return view('menu', compact(
+            'breakfasts',
+            'lunches',
+            'dinners'
+        ));
     }
 }

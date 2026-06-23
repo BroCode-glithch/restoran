@@ -56,6 +56,8 @@ class OrderController extends Controller
             'delivery_type' => ['required', 'in:pickup,delivery'],
             'delivery_address' => ['nullable', 'string', 'max:1000'],
             'notes' => ['nullable', 'string', 'max:1000'],
+            'payment_method' => ['required', 'in:demo_card,bank_transfer,cash_on_delivery'],
+            'payment_reference' => ['nullable', 'string', 'max:255'],
         ]);
 
         $order = $orderWorkflowService->placeOrder($validated, $items, auth()->user());
