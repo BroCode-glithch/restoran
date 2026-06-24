@@ -120,18 +120,21 @@ return [
         'manager' => [
             ['label' => 'Dashboard', 'route' => 'manager.dashboard', 'icon' => 'fa-solid fa-chart-column'],
             ['label' => 'Orders', 'route' => 'manager.orders.index', 'icon' => 'fa-solid fa-clipboard-list'],
+            ['label' => 'Services', 'route' => 'admin.services.index', 'icon' => 'fa-solid fa-bell-concierge'],
             ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'fa-solid fa-utensils'],
             ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
         ],
         'super_admin' => [
             ['label' => 'Dashboard', 'route' => 'super-admin.dashboard', 'icon' => 'fa-solid fa-shield-halved'],
             ['label' => 'Users', 'route' => 'admin.users.index', 'icon' => 'fa-solid fa-users-gear'],
+            ['label' => 'Services', 'route' => 'admin.services.index', 'icon' => 'fa-solid fa-bell-concierge'],
             ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
             ['label' => 'Flags', 'route' => 'admin.flags.index', 'icon' => 'fa-solid fa-flag'],
         ],
         'developer' => [
             ['label' => 'Dashboard', 'route' => 'developer.dashboard', 'icon' => 'fa-solid fa-code'],
             ['label' => 'Logs', 'route' => 'developer.logs.index', 'icon' => 'fa-solid fa-memo-circle-info'],
+            ['label' => 'Services', 'route' => 'admin.services.index', 'icon' => 'fa-solid fa-bell-concierge'],
             ['label' => 'Flags', 'route' => 'admin.flags.index', 'icon' => 'fa-solid fa-flag'],
             ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
         ],

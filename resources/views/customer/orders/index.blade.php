@@ -18,6 +18,21 @@
 </div>
 
 <div class="ops-card p-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+        <div>
+            <h4 class="mb-1">Orders</h4>
+            <p class="text-muted mb-0">Showing {{ $orders->count() }} records on this page.</p>
+        </div>
+        <form method="GET" class="d-flex align-items-center gap-2">
+            <label for="ordersPerPage" class="small text-muted mb-0">Per page</label>
+            <select id="ordersPerPage" name="per_page" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                @foreach([10, 12, 20, 50] as $option)
+                    <option value="{{ $option }}" {{ (int) ($perPage ?? 12) === $option ? 'selected' : '' }}>{{ $option }}</option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+
     <div class="table-responsive">
         <table class="table align-middle ops-table">
                     <thead>
@@ -52,6 +67,11 @@
                             <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-primary btn-sm">View</a>
                             @if(auth()->user()->canAccessRole('staff'))
                                 @php
+                                    $customerWhatsappUrl = whatsappChatUrl(
+                                        $order->customer_phone,
+                                        'Hello ' . $order->customer_name . ', your order ' . $order->order_number . ' is currently ' . orderStatusLabel($order->status) . '.'
+                                    );
+
                                     $statusOptions = auth()->user()->canAccessRole('super_admin')
                                         ? config('foodops.order_status_pipeline')
                                         : array_filter([
@@ -59,6 +79,11 @@
                                             'cancelled' => config('foodops.order_status_pipeline.cancelled'),
                                         ]);
                                 @endphp
+                                @if($customerWhatsappUrl)
+                                    <a href="{{ $customerWhatsappUrl }}" target="_blank" rel="noopener" class="btn btn-success btn-sm ms-2 mt-2">
+                                        <i class="fa-brands fa-whatsapp me-1"></i>WhatsApp
+                                    </a>
+                                @endif
                                 <form action="{{ route('orders.status.update', $order) }}" method="POST" class="d-inline-flex gap-2 ms-2 mt-2">
                                     @csrf
                                     @method('PATCH')

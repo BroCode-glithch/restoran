@@ -14,14 +14,22 @@
 </div>
 
 <div class="ops-card p-4 mb-4">
-    <form class="row g-3" method="GET">
-        <div class="col-md-4">
+    <form class="row g-3 align-items-end" method="GET">
+        <div class="col-md-3">
             <input type="text" name="category" class="form-control" placeholder="Category filter" value="{{ request('category') }}">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <input type="text" name="level" class="form-control" placeholder="Level filter" value="{{ request('level') }}">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <label for="logsPerPage" class="small text-muted mb-1">Per page</label>
+            <select id="logsPerPage" name="per_page" class="form-select">
+                @foreach([10, 20, 50] as $option)
+                    <option value="{{ $option }}" {{ (int) ($perPage ?? 20) === $option ? 'selected' : '' }}>{{ $option }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-3">
             <button class="btn btn-primary w-100" type="submit">Filter Logs</button>
         </div>
     </form>

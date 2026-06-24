@@ -37,7 +37,21 @@
 
     <div class="col-lg-8">
         <div class="ops-card p-4">
-            <h4 class="mb-3">Categories</h4>
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                <div>
+                    <h4 class="mb-1">Categories</h4>
+                    <p class="text-muted mb-0">Keep the menu organized and easy to scan.</p>
+                </div>
+
+                <form method="GET" class="d-flex align-items-center gap-2">
+                    <label for="categoriesPerPage" class="small text-muted mb-0">Per page</label>
+                    <select id="categoriesPerPage" name="per_page" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                        @foreach([5, 10, 20, 50] as $option)
+                            <option value="{{ $option }}" {{ (int) ($perPage ?? 10) === $option ? 'selected' : '' }}>{{ $option }}</option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
             <div class="table-responsive">
                 <table class="table align-middle ops-table">
                     <thead>
@@ -75,6 +89,10 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $categories->links() }}
             </div>
         </div>
     </div>

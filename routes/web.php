@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FeatureFlagController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
@@ -63,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/manager/orders', [OrderController::class, 'index'])->name('manager.orders.index')->middleware('role:manager');
 
     Route::prefix('admin')->name('admin.')->middleware('role:manager')->group(function () {
+        Route::resource('services', ServiceController::class)->except(['show', 'create']);
         Route::resource('products', ProductController::class)->except(['show', 'create']);
         Route::post('products/bulk-availability', [ProductController::class, 'bulkAvailability'])->name('products.bulk-availability');
         Route::resource('categories', CategoryController::class)->except(['show', 'create']);

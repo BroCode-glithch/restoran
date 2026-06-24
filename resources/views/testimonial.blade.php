@@ -3,62 +3,53 @@
 @section('title', 'Our Testimonials | ' . getSetting('site_title'))
 
 @section('content')
-
-<!-- Testimonial Start -->
-<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+<div class="container-xxl py-5">
     <div class="container">
-        <div class="text-center">
-            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
-            <h1 class="mb-5">Our Clients Say!!!</h1>
+        <div class="text-center mb-5">
+            <h5 class="section-title ff-secondary text-center text-primary fw-normal">Customer Stories</h5>
+            <h1 class="mb-3">Recent completed orders and service snapshots.</h1>
+            <p class="text-muted mb-0">This section uses live order data so it stays relevant to the current business state.</p>
         </div>
-        <div class="owl-carousel testimonial-carousel">
-            <div class="testimonial-item bg-transparent border rounded p-4">
-                <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                <div class="d-flex align-items-center">
-                    <img class="img-fluid flex-shrink-0 rounded-circle" src="img/testimonial-1.jpg" style="width: 50px; height: 50px;">
-                    <div class="ps-3">
-                        <h5 class="mb-1">Client Name</h5>
-                        <small>Profession</small>
+
+        <div class="row g-4">
+            @forelse($customerStories as $story)
+                @php
+                    $parts = preg_split('/\s+/', trim($story->customer_name));
+                    $initials = strtoupper(substr($parts[0] ?? 'C', 0, 1) . substr($parts[1] ?? '', 0, 1));
+                @endphp
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-item bg-white border rounded-4 p-4 h-100 cursor-pointer">
+                        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark" style="width:56px;height:56px;background:rgba(254,161,22,.14);">
+                                    {{ $initials }}
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">{{ $story->customer_name }}</h5>
+                                    <small class="text-muted">{{ $story->order_number }}</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-success">Completed</span>
+                        </div>
+
+                        <p class="mb-3 text-muted">
+                            {{ $story->notes ?: 'Completed ' . ucfirst($story->delivery_type) . ' order with live WhatsApp updates.' }}
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center small text-muted">
+                            <span>{{ ucfirst($story->delivery_type) }}</span>
+                            <span>{{ moneyFormat($story->total, $story->currency) }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="testimonial-item bg-transparent border rounded p-4">
-                <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                <div class="d-flex align-items-center">
-                    <img class="img-fluid flex-shrink-0 rounded-circle" src="img/testimonial-2.jpg" style="width: 50px; height: 50px;">
-                    <div class="ps-3">
-                        <h5 class="mb-1">Client Name</h5>
-                        <small>Profession</small>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-light border mb-0">
+                        No completed orders yet. Testimonials will appear here after the first orders are fulfilled.
                     </div>
                 </div>
-            </div>
-            <div class="testimonial-item bg-transparent border rounded p-4">
-                <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                <div class="d-flex align-items-center">
-                    <img class="img-fluid flex-shrink-0 rounded-circle" src="img/testimonial-3.jpg" style="width: 50px; height: 50px;">
-                    <div class="ps-3">
-                        <h5 class="mb-1">Client Name</h5>
-                        <small>Profession</small>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-item bg-transparent border rounded p-4">
-                <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                <div class="d-flex align-items-center">
-                    <img class="img-fluid flex-shrink-0 rounded-circle" src="img/testimonial-4.jpg" style="width: 50px; height: 50px;">
-                    <div class="ps-3">
-                        <h5 class="mb-1">Client Name</h5>
-                        <small>Profession</small>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </div>
-<!-- Testimonial End -->
-
 @endsection

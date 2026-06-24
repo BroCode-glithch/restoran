@@ -174,3 +174,16 @@ if (!function_exists('mediaUrl')) {
         return asset('storage/' . ltrim($path, '/'));
     }
 }
+
+if (!function_exists('whatsappChatUrl')) {
+    function whatsappChatUrl($phone, $message)
+    {
+        $phone = preg_replace('/[^0-9]/', '', (string) $phone);
+
+        if (empty($phone)) {
+            return null;
+        }
+
+        return 'https://wa.me/' . $phone . '?text=' . urlencode((string) $message);
+    }
+}

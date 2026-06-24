@@ -3,6 +3,11 @@
 @section('title', 'Home | ' . getSetting('site_title'))
 
 @section('content')
+@php
+    $orderUrl = auth()->check() && auth()->user()->isCustomer()
+        ? route('catalog.index')
+        : route('login', ['next' => 'catalog.index']);
+@endphp
 <div class="container-xxl bg-white p-0">
     <!-- Service Start -->
     <div class="container-xxl py-5">
@@ -121,8 +126,8 @@
                         <div class="row g-4">
                             @foreach ($breakfasts as $item)
                             <div class="col-lg-6">
-                                <div class="d-flex align-items-center">
-                                    <img class="flex-shrink-0 img-fluid rounded" src="img/menu-1.jpg" alt="" style="width: 80px;">
+                                <a href="{{ $orderUrl }}" class="menu-card d-flex align-items-center text-decoration-none text-dark h-100 rounded-4 border bg-white p-3 shadow-sm">
+                                    <img class="flex-shrink-0 img-fluid rounded-4" src="{{ mediaUrl($item->image, asset('assets/img/menu-1.jpg')) }}" alt="{{ $item->name }}" style="width: 80px; height: 80px; object-fit: cover;">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
                                             <span>{{ $item->name }}</span>
@@ -130,7 +135,7 @@
                                         </h5>
                                         <small class="fst-italic">{{ $item->description }}</small>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                             @endforeach
                         </div>
@@ -139,8 +144,8 @@
                         <div class="row g-4">
                             @foreach ($lunches as $item)
                             <div class="col-lg-6">
-                                <div class="d-flex align-items-center">
-                                    <img class="flex-shrink-0 img-fluid rounded" src="img/menu-2.jpg" alt="" style="width: 80px;">
+                                <a href="{{ $orderUrl }}" class="menu-card d-flex align-items-center text-decoration-none text-dark h-100 rounded-4 border bg-white p-3 shadow-sm">
+                                    <img class="flex-shrink-0 img-fluid rounded-4" src="{{ mediaUrl($item->image, asset('assets/img/menu-2.jpg')) }}" alt="{{ $item->name }}" style="width: 80px; height: 80px; object-fit: cover;">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
                                             <span>{{ $item->name }}</span>
@@ -148,7 +153,7 @@
                                         </h5>
                                         <small class="fst-italic">{{ $item->description }}</small>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                             @endforeach
                         </div>
@@ -157,8 +162,8 @@
                         <div class="row g-4">
                             @foreach ($dinners as $item)
                             <div class="col-lg-6">
-                                <div class="d-flex align-items-center">
-                                    <img class="flex-shrink-0 img-fluid rounded" src="img/menu-3.jpg" alt="" style="width: 80px;">
+                                <a href="{{ $orderUrl }}" class="menu-card d-flex align-items-center text-decoration-none text-dark h-100 rounded-4 border bg-white p-3 shadow-sm">
+                                    <img class="flex-shrink-0 img-fluid rounded-4" src="{{ mediaUrl($item->image, asset('assets/img/menu-3.jpg')) }}" alt="{{ $item->name }}" style="width: 80px; height: 80px; object-fit: cover;">
                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
                                             <span>{{ $item->name }}</span>
@@ -166,7 +171,7 @@
                                         </h5>
                                         <small class="fst-italic">{{ $item->description }}</small>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                             @endforeach
                         </div>
@@ -264,65 +269,28 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h5 class="section-title ff-secondary text-center text-primary fw-normal">Team Members</h5>
-                <h1 class="mb-5">Our Master Chefs</h1>
+                <h1 class="mb-5">Our Active Team</h1>
             </div>
             <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item text-center rounded overflow-hidden">
-                        <div class="rounded-circle overflow-hidden m-4">
-                            <img class="img-fluid" src="{{ asset("assets/img/team-1.jpg") }}" alt="">
-                        </div>
-                        <h5 class="mb-0">Full Name</h5>
-                        <small>Designation</small>
-                        <div class="d-flex justify-content-center mt-3">
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item text-center rounded overflow-hidden">
-                        <div class="rounded-circle overflow-hidden m-4">
-                            <img class="img-fluid" src="{{ asset("assets/img/team-2.jpg") }}" alt="">
-                        </div>
-                        <h5 class="mb-0">Full Name</h5>
-                        <small>Designation</small>
-                        <div class="d-flex justify-content-center mt-3">
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
+                @forelse($teamMembers as $member)
+                    @php
+                        $parts = preg_split('/\s+/', trim($member->name));
+                        $initials = strtoupper(substr($parts[0] ?? 'T', 0, 1) . substr($parts[1] ?? '', 0, 1));
+                    @endphp
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="team-item text-center rounded overflow-hidden h-100 cursor-pointer">
+                            <div class="rounded-circle overflow-hidden m-4 d-flex align-items-center justify-content-center mx-auto" style="width:140px;height:140px;background:linear-gradient(135deg, rgba(254,161,22,.18), rgba(15,23,43,.08));">
+                                <span class="display-6 fw-bold text-dark">{{ $initials }}</span>
+                            </div>
+                            <h5 class="mb-0">{{ $member->name }}</h5>
+                            <small>{{ roleLabel($member->role) }}</small>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item text-center rounded overflow-hidden">
-                        <div class="rounded-circle overflow-hidden m-4">
-                            <img class="img-fluid" src="{{ asset("assets/img/team-3.jpg") }}" alt="">
-                        </div>
-                        <h5 class="mb-0">Full Name</h5>
-                        <small>Designation</small>
-                        <div class="d-flex justify-content-center mt-3">
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-light border">No active team members are visible yet.</div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="team-item text-center rounded overflow-hidden">
-                        <div class="rounded-circle overflow-hidden m-4">
-                            <img class="img-fluid" src="{{ asset("assets/img/team-4.jpg") }}" alt="">
-                        </div>
-                        <h5 class="mb-0">Full Name</h5>
-                        <small>Designation</small>
-                        <div class="d-flex justify-content-center mt-3">
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-primary mx-1" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -335,54 +303,39 @@
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container">
             <div class="text-center">
-                <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
-                <h1 class="mb-5">Our Clients Say!!!</h1>
+                <h5 class="section-title ff-secondary text-center text-primary fw-normal">Customer Stories</h5>
+                <h1 class="mb-5">Recent completed orders</h1>
             </div>
             <div class="owl-carousel testimonial-carousel">
-                <div class="testimonial-item bg-transparent border rounded p-4">
-                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                    <div class="d-flex align-items-center">
-                        <img class="img-fluid flex-shrink-0 rounded-circle" src="{{ asset("assets/img/testimonial-1.jpg") }}" style="width: 50px; height: 50px;">
-                        <div class="ps-3">
-                            <h5 class="mb-1">Client Name</h5>
-                            <small>Profession</small>
+                @forelse($customerStories as $story)
+                    @php
+                        $parts = preg_split('/\s+/', trim($story->customer_name));
+                        $initials = strtoupper(substr($parts[0] ?? 'C', 0, 1) . substr($parts[1] ?? '', 0, 1));
+                    @endphp
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark" style="width:50px;height:50px;background:rgba(254,161,22,.14);">
+                                    {{ $initials }}
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">{{ $story->customer_name }}</h5>
+                                    <small>{{ $story->order_number }}</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-success">Completed</span>
+                        </div>
+                        <p class="mb-3">{{ $story->notes ?: 'Delivered smoothly with live WhatsApp updates and a clean order flow.' }}</p>
+                        <div class="d-flex align-items-center justify-content-between small text-muted">
+                            <span>{{ ucfirst($story->delivery_type) }}</span>
+                            <span>{{ moneyFormat($story->total, $story->currency) }}</span>
                         </div>
                     </div>
-                </div>
-                <div class="testimonial-item bg-transparent border rounded p-4">
-                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                    <div class="d-flex align-items-center">
-                        <img class="img-fluid flex-shrink-0 rounded-circle" src="{{ asset("assets/img/testimonial-2.jpg") }}" style="width: 50px; height: 50px;">
-                        <div class="ps-3">
-                            <h5 class="mb-1">Client Name</h5>
-                            <small>Profession</small>
-                        </div>
+                @empty
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <p class="mb-0">Testimonials will appear here after completed orders start coming in.</p>
                     </div>
-                </div>
-                <div class="testimonial-item bg-transparent border rounded p-4">
-                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                    <div class="d-flex align-items-center">
-                        <img class="img-fluid flex-shrink-0 rounded-circle" src="{{ asset("assets/img/testimonial-3.jpg") }}" style="width: 50px; height: 50px;">
-                        <div class="ps-3">
-                            <h5 class="mb-1">Client Name</h5>
-                            <small>Profession</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-item bg-transparent border rounded p-4">
-                    <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                    <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                    <div class="d-flex align-items-center">
-                        <img class="img-fluid flex-shrink-0 rounded-circle" src="{{ asset("assets/img/testimonial-4.jpg") }}" style="width: 50px; height: 50px;">
-                        <div class="ps-3">
-                            <h5 class="mb-1">Client Name</h5>
-                            <small>Profession</small>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>

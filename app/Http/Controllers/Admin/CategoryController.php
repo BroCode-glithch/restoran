@@ -13,10 +13,12 @@ class CategoryController extends Controller
     public function index()
     {
         $businessId = currentBusinessId();
+        $perPage = $this->perPage(request());
 
         return view('admin.categories.index', [
-            'categories' => ProductCategory::query()->where('business_id', $businessId)->withCount('products')->orderBy('sort_order')->latest()->get(),
+            'categories' => ProductCategory::query()->where('business_id', $businessId)->withCount('products')->orderBy('sort_order')->latest()->paginate($perPage)->withQueryString(),
             'editingCategory' => null,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -25,10 +27,12 @@ class CategoryController extends Controller
         $this->authorizeCategory($category);
 
         $businessId = currentBusinessId();
+        $perPage = $this->perPage(request());
 
         return view('admin.categories.index', [
-            'categories' => ProductCategory::query()->where('business_id', $businessId)->withCount('products')->orderBy('sort_order')->latest()->get(),
+            'categories' => ProductCategory::query()->where('business_id', $businessId)->withCount('products')->orderBy('sort_order')->latest()->paginate($perPage)->withQueryString(),
             'editingCategory' => $category,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -110,5 +114,13 @@ class CategoryController extends Controller
         if ($category->business_id !== currentBusinessId()) {
             abort(404);
         }
+    }
+
+    protected function perPage(Request $request)
+    {
+        $allowed = [5, 10, 20, 50];
+        $perPage = (int) $request->query('per_page', 10);
+
+        return in_array($perPage, $allowed, true) ? $perPage : 10;
     }
 }

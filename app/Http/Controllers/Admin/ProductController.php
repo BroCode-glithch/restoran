@@ -15,11 +15,13 @@ class ProductController extends Controller
     public function index()
     {
         $businessId = currentBusinessId();
+        $perPage = $this->perPage(request());
 
         return view('admin.products.index', [
-            'products' => Product::query()->where('business_id', $businessId)->with('category')->latest()->get(),
+            'products' => Product::query()->where('business_id', $businessId)->with('category')->latest()->paginate($perPage)->withQueryString(),
             'categories' => ProductCategory::query()->where('business_id', $businessId)->orderBy('sort_order')->get(),
             'editingProduct' => null,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -28,11 +30,13 @@ class ProductController extends Controller
         $this->authorizeProduct($product);
 
         $businessId = currentBusinessId();
+        $perPage = $this->perPage(request());
 
         return view('admin.products.index', [
-            'products' => Product::query()->where('business_id', $businessId)->with('category')->latest()->get(),
+            'products' => Product::query()->where('business_id', $businessId)->with('category')->latest()->paginate($perPage)->withQueryString(),
             'categories' => ProductCategory::query()->where('business_id', $businessId)->orderBy('sort_order')->get(),
             'editingProduct' => $product,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -177,5 +181,13 @@ class ProductController extends Controller
         if ($product->business_id !== currentBusinessId()) {
             abort(404);
         }
+    }
+
+    protected function perPage(Request $request)
+    {
+        $allowed = [5, 10, 20, 50];
+        $perPage = (int) $request->query('per_page', 10);
+
+        return in_array($perPage, $allowed, true) ? $perPage : 10;
     }
 }

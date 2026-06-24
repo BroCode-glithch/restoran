@@ -12,10 +12,13 @@ class UserController extends Controller
 {
     public function index(RoleManager $roleManager)
     {
+        $perPage = $this->perPage(request());
+
         return view('admin.users.index', [
-            'users' => User::query()->where('business_id', currentBusinessId())->latest()->get(),
+            'users' => User::query()->where('business_id', currentBusinessId())->latest()->paginate($perPage)->withQueryString(),
             'roles' => $roleManager->assignableRolesFor(auth()->user()->role ?: 'customer'),
             'canManageRoles' => $roleManager->canManageRoles(auth()->user()->role ?: 'customer'),
+            'perPage' => $perPage,
         ]);
     }
 
@@ -63,5 +66,13 @@ class UserController extends Controller
         if ($user->business_id !== currentBusinessId()) {
             abort(404);
         }
+    }
+
+    protected function perPage(Request $request)
+    {
+        $allowed = [10, 20, 50];
+        $perPage = (int) $request->query('per_page', 10);
+
+        return in_array($perPage, $allowed, true) ? $perPage : 10;
     }
 }

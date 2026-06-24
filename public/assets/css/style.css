@@ -561,6 +561,23 @@ body.site-body {
     border-right: 0;
 }
 
+.cursor-pointer,
+.menu-card,
+.booking-card {
+    cursor: pointer;
+}
+
+.menu-card,
+.booking-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.menu-card:hover,
+.booking-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px rgba(15, 23, 43, 0.12);
+}
+
 @media (max-width: 767.98px) {
     .hero-header {
         text-align: center;

@@ -107,7 +107,8 @@
                 @csrf
                 <input type="text" name="customer_name" class="form-control mb-4" placeholder="Full name" value="{{ old('customer_name', auth()->user()->name) }}" required>
                 <input type="email" name="customer_email" class="form-control mb-4" placeholder="Email address" value="{{ old('customer_email', auth()->user()->email) }}">
-                <input type="text" name="customer_phone" class="form-control mb-4" placeholder="Phone number" value="{{ old('customer_phone', auth()->user()->phone) }}" required>
+                <input type="tel" name="customer_phone" class="form-control mb-4" placeholder="WhatsApp number" value="{{ old('customer_phone', auth()->user()->phone) }}" required>
+                <div class="small text-muted mt-n3 mb-2">Please use a WhatsApp number so we can send live order updates.</div>
                 <select name="delivery_type" class="form-select mb-4" required>
                     <option value="pickup">Pickup</option>
                     <option value="delivery">Delivery</option>

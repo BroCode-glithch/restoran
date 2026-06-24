@@ -115,6 +115,15 @@ body.ops-body {
     box-shadow: var(--ops-shadow);
 }
 
+.ops-card,
+.ops-stat,
+.ops-product-card,
+.ops-setting-card,
+.ops-insight-card,
+.ops-chart-card {
+    cursor: pointer;
+}
+
 .ops-card-soft {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
 }
@@ -353,6 +362,14 @@ body.ops-ready .ops-shell {
 .ops-insight-card:hover,
 .ops-chart-card:hover {
     transform: translateY(-4px);
+}
+
+.ops-table tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.ops-table tbody tr:hover {
+    background: rgba(254, 161, 22, 0.04);
 }
 
 .ops-chart-card {

@@ -59,9 +59,19 @@
                     <h4 class="mb-1">Products</h4>
                     <p class="text-muted mb-0">Use the checkboxes to activate or hide items for today.</p>
                 </div>
-                <div class="d-flex gap-2">
-                    <button form="bulk-products-form" name="availability_action" value="activate" type="submit" class="btn btn-success btn-sm">Mark Available</button>
-                    <button form="bulk-products-form" name="availability_action" value="hide" type="submit" class="btn btn-outline-secondary btn-sm">Hide Selected</button>
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <form method="GET" class="d-flex align-items-center gap-2">
+                        <label for="productsPerPage" class="small text-muted mb-0">Per page</label>
+                        <select id="productsPerPage" name="per_page" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                            @foreach([5, 10, 20, 50] as $option)
+                                <option value="{{ $option }}" {{ (int) ($perPage ?? 10) === $option ? 'selected' : '' }}>{{ $option }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                    <div class="d-flex gap-2">
+                        <button form="bulk-products-form" name="availability_action" value="activate" type="submit" class="btn btn-success btn-sm">Mark Available</button>
+                        <button form="bulk-products-form" name="availability_action" value="hide" type="submit" class="btn btn-outline-secondary btn-sm">Hide Selected</button>
+                    </div>
                 </div>
             </div>
 
@@ -117,6 +127,10 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $products->links() }}
             </div>
         </div>
     </div>

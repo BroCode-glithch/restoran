@@ -70,6 +70,19 @@
             <div class="mb-2"><span class="text-muted">Phone:</span> <strong>{{ $order->customer_phone }}</strong></div>
             <div class="mb-2"><span class="text-muted">Delivery:</span> <strong>{{ ucfirst($order->delivery_type) }}</strong></div>
             <div class="mb-2"><span class="text-muted">Address:</span> <strong>{{ $order->delivery_address ?: 'Pickup order' }}</strong></div>
+
+            @php
+                $customerWhatsappUrl = whatsappChatUrl(
+                    $order->customer_phone,
+                    'Hello ' . $order->customer_name . ', your order ' . $order->order_number . ' is currently ' . orderStatusLabel($order->status) . '.'
+                );
+            @endphp
+
+            @if($customerWhatsappUrl)
+                <a href="{{ $customerWhatsappUrl }}" target="_blank" rel="noopener" class="btn btn-success w-100 mt-3">
+                    <i class="fa-brands fa-whatsapp me-1"></i>Send WhatsApp update
+                </a>
+            @endif
         </div>
 
         <div class="ops-card p-4 mb-4">

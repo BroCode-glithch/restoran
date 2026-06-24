@@ -11,6 +11,7 @@ class SystemLogController extends Controller
     public function index(Request $request)
     {
         $query = SystemLog::query()->where('business_id', currentBusinessId())->latest();
+        $perPage = $this->perPage($request);
 
         if ($request->filled('category')) {
             $query->where('category', $request->input('category'));
@@ -21,7 +22,16 @@ class SystemLogController extends Controller
         }
 
         return view('developer.logs.index', [
-            'logs' => $query->paginate(20)->withQueryString(),
+            'logs' => $query->paginate($perPage)->withQueryString(),
+            'perPage' => $perPage,
         ]);
+    }
+
+    protected function perPage(Request $request)
+    {
+        $allowed = [10, 20, 50];
+        $perPage = (int) $request->query('per_page', 20);
+
+        return in_array($perPage, $allowed, true) ? $perPage : 20;
     }
 }

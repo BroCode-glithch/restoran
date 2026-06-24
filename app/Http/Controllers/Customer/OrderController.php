@@ -13,6 +13,7 @@ class OrderController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $perPage = $this->perPage(request());
 
         $orders = Order::query()
             ->where('business_id', currentBusinessId())
@@ -26,9 +27,10 @@ class OrderController extends Controller
                 $query->whereIn('status', ['placed', 'confirmed', 'preparing', 'ready']);
             })
             ->latest()
-            ->paginate(12);
+            ->paginate($perPage)
+            ->withQueryString();
 
-        return view('customer.orders.index', compact('orders', 'user'));
+        return view('customer.orders.index', compact('orders', 'user', 'perPage'));
     }
 
     public function show(Order $order)
@@ -103,5 +105,13 @@ class OrderController extends Controller
         if ($user->isCustomer() && $order->user_id !== $user->id) {
             abort(403);
         }
+    }
+
+    protected function perPage(Request $request)
+    {
+        $allowed = [10, 12, 20, 50];
+        $perPage = (int) $request->query('per_page', 12);
+
+        return in_array($perPage, $allowed, true) ? $perPage : 12;
     }
 }
