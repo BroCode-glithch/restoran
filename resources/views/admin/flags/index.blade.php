@@ -22,10 +22,10 @@
                 @if(isset($editingFlag) && $editingFlag)
                     @method('PUT')
                 @endif
-                <input type="text" name="key" class="form-control" placeholder="Flag key" value="{{ old('key', optional($editingFlag)->key) }}" required>
-                <input type="text" name="label" class="form-control" placeholder="Label" value="{{ old('label', optional($editingFlag)->label) }}" required>
-                <textarea name="description" class="form-control" rows="4" placeholder="Description">{{ old('description', optional($editingFlag)->description) }}</textarea>
-                <div class="form-check">
+                <input type="text" name="key" class="form-control mb-4" placeholder="Flag key" value="{{ old('key', optional($editingFlag)->key) }}" required>
+                <input type="text" name="label" class="form-control mb-4" placeholder="Label" value="{{ old('label', optional($editingFlag)->label) }}" required>
+                <textarea name="description" class="form-control mb-4" rows="4" placeholder="Description">{{ old('description', optional($editingFlag)->description) }}</textarea>
+                <div class="form-check mb-4">
                     <input type="hidden" name="enabled" value="0">
                     <input class="form-check-input" type="checkbox" name="enabled" value="1" id="enabled" {{ old('enabled', optional($editingFlag)->enabled) ? 'checked' : '' }}>
                     <label class="form-check-label" for="enabled">Enabled</label>
@@ -58,7 +58,7 @@
                                 <td><span class="badge {{ $flag->enabled ? 'bg-success' : 'bg-secondary' }}">{{ $flag->enabled ? 'Enabled' : 'Disabled' }}</span></td>
                                 <td>{{ $flag->description }}</td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.flags.edit', $flag) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                    <a href="{{ route('admin.flags.edit', $flag) }}" class="btn btn-outline-primary btn-sm m-2">Edit</a>
                                     <form action="{{ route('admin.flags.destroy', $flag) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')

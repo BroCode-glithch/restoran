@@ -59,7 +59,7 @@
                                             'cancelled' => config('foodops.order_status_pipeline.cancelled'),
                                         ]);
                                 @endphp
-                                <form action="{{ route('orders.status.update', $order) }}" method="POST" class="d-inline-flex gap-2 ms-2">
+                                <form action="{{ route('orders.status.update', $order) }}" method="POST" class="d-inline-flex gap-2 ms-2 mt-2">
                                     @csrf
                                     @method('PATCH')
                                     <select name="status" class="form-select form-select-sm">

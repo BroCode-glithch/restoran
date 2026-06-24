@@ -109,14 +109,14 @@
                 <form action="{{ route('orders.status.update', $order) }}" method="POST" class="vstack gap-3">
                     @csrf
                     @method('PATCH')
-                    <select name="status" class="form-select">
+                    <select name="status" class="form-select mb-4">
                         @foreach($statusOptions as $statusKey => $statusConfig)
                             @if($statusKey && $statusConfig && $statusKey !== $order->status)
                                 <option value="{{ $statusKey }}">{{ $statusConfig['label'] }}</option>
                             @endif
                         @endforeach
                     </select>
-                    <textarea name="note" class="form-control" rows="3" placeholder="Optional note"></textarea>
+                    <textarea name="note" class="form-control mb-4" rows="3" placeholder="Optional note"></textarea>
                     <button type="submit" class="btn btn-primary">Save Status</button>
                 </form>
             </div>

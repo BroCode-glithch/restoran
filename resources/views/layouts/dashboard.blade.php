@@ -12,6 +12,7 @@
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/foodops.css') }}" rel="stylesheet">
+    @stack('styles')
     <style>
         :root {
             --ops-primary: {{ getSetting('branding.primary_color', '#FEA116') }};
@@ -68,6 +69,13 @@
     $currency = getSetting('operations.currency', 'NGN');
     $logoUrl = mediaUrl(getSetting('branding.logo_url'), asset('assets/img/hero.png'));
 @endphp
+<div class="ops-preloader" id="opsPreloader" aria-hidden="true">
+    <div class="ops-preloader-card text-center">
+        <div class="spinner-border text-primary" role="status" aria-label="Loading"></div>
+        <div class="fw-bold mt-3">{{ $businessName }}</div>
+        <div class="text-muted small">Loading your workspace...</div>
+    </div>
+</div>
 <div class="ops-shell">
     <div class="ops-sidebar-backdrop d-lg-none" id="opsSidebarBackdrop"></div>
 
@@ -98,7 +106,7 @@
 
         <nav class="p-3">
             @foreach($navItems as $item)
-                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route'], $item['route'] . '.*') ? 'active' : '' }}">
                     <span class="ops-nav-icon">
                         <i class="{{ $item['icon'] }}"></i>
                     </span>
@@ -182,7 +190,7 @@
     @if(!empty($bottomNav))
         <nav class="ops-bottom-nav">
             @foreach($bottomNav as $item)
-                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route'], $item['route'] . '.*') ? 'active' : '' }}">
                     <div class="mb-1"><i class="{{ $item['icon'] }}"></i></div>
                     <div>{{ $item['label'] }}</div>
                 </a>
@@ -199,6 +207,7 @@
         var toggle = document.getElementById('opsSidebarToggle');
         var close = document.getElementById('opsSidebarClose');
         var backdrop = document.getElementById('opsSidebarBackdrop');
+        var preloader = document.getElementById('opsPreloader');
         var sidebarLinks = document.querySelectorAll('.ops-sidebar nav a, .ops-bottom-nav a');
 
         function closeSidebar() {
@@ -225,6 +234,14 @@
                     closeSidebar();
                 }
             });
+        });
+
+        window.addEventListener('load', function () {
+            body.classList.add('ops-ready');
+
+            if (preloader) {
+                preloader.classList.add('is-hidden');
+            }
         });
     }());
 </script>

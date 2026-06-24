@@ -291,3 +291,159 @@ body.ops-body {
         padding: 1.25rem;
     }
 }
+
+/*** UX Polish ***/
+body.ops-body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body.ops-ready .ops-shell {
+    animation: opsFadeIn 0.35s ease both;
+}
+
+@keyframes opsFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes opsRiseIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ops-card,
+.ops-stat,
+.ops-product-card,
+.ops-setting-card,
+.ops-insight-card,
+.ops-chart-card {
+    animation: opsRiseIn 0.45s ease both;
+}
+
+.ops-card,
+.ops-stat,
+.ops-product-card,
+.ops-setting-card,
+.ops-insight-card,
+.ops-chart-card,
+.ops-hero,
+.ops-bottom-nav {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.ops-card:hover,
+.ops-stat:hover,
+.ops-product-card:hover,
+.ops-setting-card:hover,
+.ops-insight-card:hover,
+.ops-chart-card:hover {
+    transform: translateY(-4px);
+}
+
+.ops-chart-card {
+    overflow: hidden;
+}
+
+.ops-chart-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.ops-chart-wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.ops-kpi-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(254, 161, 22, 0.12);
+    color: var(--ops-primary);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ops-insight-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
+    border: 1px solid var(--ops-border);
+    border-radius: 24px;
+    box-shadow: var(--ops-shadow);
+}
+
+.ops-insight-card .display-6 {
+    font-size: clamp(1.85rem, 4vw, 3rem);
+    line-height: 1;
+}
+
+.ops-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    background: rgba(248, 250, 252, 0.74);
+    backdrop-filter: blur(12px);
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.ops-preloader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.ops-preloader-card {
+    min-width: 220px;
+    padding: 1.5rem 1.75rem;
+    border-radius: 24px;
+    background: #ffffff;
+    border: 1px solid var(--ops-border);
+    box-shadow: 0 20px 50px rgba(15, 23, 43, 0.10);
+}
+
+.ops-hero .btn,
+.ops-card .btn,
+.ops-insight-card .btn {
+    white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+    .ops-chart-wrap {
+        min-height: 220px;
+    }
+
+    .ops-hero .btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

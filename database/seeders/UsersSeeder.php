@@ -21,6 +21,13 @@ class UsersSeeder extends Seeder
                 'phone' => '+2348010000001',
             ],
             [
+                'name' => 'Bro Code',
+                'email' => 'emmaariyom@gmail.com',
+                'password' => Hash::make('password'),
+                'role' => 'customer',
+                'phone' => '+2348081770338',
+            ],
+            [
                 'name' => 'Emma Ariyomi',
                 'email' => 'emmaariyom1@gmail.com',
                 'password' => Hash::make('password'),

@@ -477,3 +477,118 @@
     padding-right: 0;
     border-right: none;
 }
+
+/*** UX Polish ***/
+body.site-body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+#spinner {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(8px);
+}
+
+.spinner-card {
+    min-width: 220px;
+    padding: 1.5rem 1.75rem;
+    border-radius: 24px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 43, 0.08);
+    box-shadow: 0 20px 50px rgba(15, 23, 43, 0.10);
+}
+
+.navbar-dark .navbar-brand h1,
+.navbar-dark .navbar-nav .nav-link,
+.footer .btn.btn-link,
+.btn,
+.service-item,
+.team-item,
+.testimonial-item,
+.video .btn-play,
+.nav-pills .nav-item .active {
+    transition: all 0.25s ease;
+}
+
+.navbar-dark .navbar-nav .dropdown-menu .dropdown-item.active {
+    color: var(--primary);
+    background: rgba(254, 161, 22, 0.12);
+}
+
+.hero-header .display-3 {
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+}
+
+.service-item,
+.team-item,
+.testimonial-item {
+    border-radius: 24px;
+    border: 1px solid rgba(15, 23, 43, 0.08);
+    box-shadow: 0 18px 50px rgba(15, 23, 43, 0.08);
+    background: rgba(255, 255, 255, 0.98);
+    overflow: hidden;
+}
+
+.service-item:hover,
+.team-item:hover,
+.testimonial-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(15, 23, 43, 0.12);
+}
+
+.testimonial-carousel .owl-item.center .testimonial-item {
+    transform: translateY(-6px);
+}
+
+.nav-pills .nav-item .active {
+    background: rgba(254, 161, 22, 0.12);
+    border-bottom: 2px solid var(--primary);
+    border-radius: 14px 14px 0 0;
+}
+
+.footer .footer-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+}
+
+.footer .footer-menu a {
+    margin-right: 0;
+    padding-right: 0;
+    border-right: 0;
+}
+
+@media (max-width: 767.98px) {
+    .hero-header {
+        text-align: center;
+    }
+
+    .hero-header .display-3 {
+        font-size: calc(1.5rem + 4vw);
+    }
+
+    .service-item,
+    .team-item,
+    .testimonial-item {
+        margin-bottom: 0.25rem;
+    }
+
+    .back-to-top {
+        right: 18px;
+        bottom: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

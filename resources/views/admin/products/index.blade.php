@@ -22,28 +22,28 @@
                 @if(isset($editingProduct) && $editingProduct)
                     @method('PUT')
                 @endif
-                <input type="text" name="name" class="form-control" placeholder="Product name" value="{{ old('name', optional($editingProduct)->name) }}" required>
-                <input type="text" name="slug" class="form-control" placeholder="Slug" value="{{ old('slug', optional($editingProduct)->slug) }}">
-                <select name="category_id" class="form-select">
+                <input type="text" name="name" class="form-control mb-4" placeholder="Product name" value="{{ old('name', optional($editingProduct)->name) }}" required>
+                <input type="text" name="slug" class="form-control mb-4" placeholder="Slug" value="{{ old('slug', optional($editingProduct)->slug) }}">
+                <select name="category_id" class="form-select mb-4">
                     <option value="">Select category</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id', optional($editingProduct)->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                     @endforeach
                 </select>
-                <select name="type" class="form-select" required>
+                <select name="type" class="form-select mb-4" required>
                     <option value="meal" {{ old('type', optional($editingProduct)->type) === 'meal' ? 'selected' : '' }}>Meal</option>
                     <option value="drink" {{ old('type', optional($editingProduct)->type) === 'drink' ? 'selected' : '' }}>Drink</option>
                     <option value="catering" {{ old('type', optional($editingProduct)->type) === 'catering' ? 'selected' : '' }}>Catering</option>
                 </select>
-                <input type="number" step="0.01" name="price" class="form-control" placeholder="Price" value="{{ old('price', optional($editingProduct)->price) }}" required>
-                <input type="number" name="preparation_time_minutes" class="form-control" placeholder="Prep time (minutes)" value="{{ old('preparation_time_minutes', optional($editingProduct)->preparation_time_minutes) }}">
-                <textarea name="description" class="form-control" rows="4" placeholder="Description">{{ old('description', optional($editingProduct)->description) }}</textarea>
-                <input type="file" name="image" class="form-control">
-                <div class="form-check">
+                <input type="number" step="0.01" name="price" class="form-control mb-4" placeholder="Price" value="{{ old('price', optional($editingProduct)->price) }}" required>
+                <input type="number" name="preparation_time_minutes" class="form-control mb-4" placeholder="Prep time (minutes)" value="{{ old('preparation_time_minutes', optional($editingProduct)->preparation_time_minutes) }}">
+                <textarea name="description" class="form-control mb-4" rows="4" placeholder="Description">{{ old('description', optional($editingProduct)->description) }}</textarea>
+                <input type="file" name="image" class="form-control mb-4">
+                <div class="form-check mb-4">
                     <input class="form-check-input" type="checkbox" name="availability" value="1" id="availability" {{ old('availability', optional($editingProduct)->availability) ? 'checked' : '' }}>
                     <label class="form-check-label" for="availability">Available</label>
                 </div>
-                <div class="form-check">
+                <div class="form-check mb-4">
                     <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="is_featured" {{ old('is_featured', optional($editingProduct)->is_featured) ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_featured">Featured product</label>
                 </div>
@@ -104,7 +104,7 @@
                                     <span class="badge {{ $product->availability ? 'bg-success' : 'bg-secondary' }}">{{ $product->availability ? 'Available' : 'Hidden' }}</span>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-primary btn-sm mb-2">Edit</a>
                                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')

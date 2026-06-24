@@ -17,7 +17,7 @@
     @csrf
     @method('PUT')
 
-    <div class="ops-setting-card p-4">
+    <div class="ops-setting-card p-4 mb-4">
         <h4 class="mb-3">Branding</h4>
         <div class="row g-3">
             <div class="col-md-6"><input type="text" name="settings[branding.business_name]" class="form-control" placeholder="Business name" value="{{ old('settings.branding.business_name', $settings['branding.business_name'] ?? '') }}"></div>
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="ops-setting-card p-4">
+    <div class="ops-setting-card p-4 mb-4">
         <h4 class="mb-3">Contact</h4>
         <div class="row g-3">
             <div class="col-md-6"><input type="email" name="settings[contact.email]" class="form-control" placeholder="Email" value="{{ old('settings.contact.email', $settings['contact.email'] ?? '') }}"></div>
@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <div class="ops-setting-card p-4">
+    <div class="ops-setting-card p-4 mb-4">
         <h4 class="mb-3">Operations</h4>
         <div class="row g-3">
             {{-- A currency Div with dropdown of all currencies --}}
@@ -74,7 +74,7 @@
         </div>
     </div>
 
-    <div class="ops-setting-card p-4">
+    <div class="ops-setting-card p-4 mb-4">
         <h4 class="mb-3">Notifications</h4>
         <div class="row g-3">
             <div class="col-md-6 form-check ps-5">
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div class="ops-setting-card p-4">
+    <div class="ops-setting-card p-4 mb-4">
         <h4 class="mb-3">Integrations</h4>
         <div class="row g-3">
             <div class="col-md-3 form-check ps-5">

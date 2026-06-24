@@ -15,6 +15,7 @@ class CartController extends Controller
             'subtotal' => $cartService->subtotal(),
             'deliveryFee' => $cartService->deliveryFee(),
             'total' => $cartService->total(),
+            'cartCount' => app(CartService::class)->count(),
         ]);
     }
 

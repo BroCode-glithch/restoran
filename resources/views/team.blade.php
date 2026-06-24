@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('titl', 'Our Team | ' . getSetting('site_title'))
+@section('title', 'Our Team | ' . getSetting('site_title'))
 
 @section('content')
 

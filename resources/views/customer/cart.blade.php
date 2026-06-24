@@ -11,7 +11,7 @@
             <p class="mb-0 text-white-50">Keep pickup and delivery details updated, then complete a demo payment before placing the order.</p>
         </div>
         <div class="col-lg-4 text-lg-end">
-            <a href="{{ route('catalog.index') }}" class="btn btn-outline-light btn-lg me-2">Continue Shopping</a>
+            <a href="{{ route('catalog.index') }}" class="btn btn-outline-light btn-lg me-2 m-2">Continue Shopping</a>
             <a href="{{ route('orders.index') }}" class="btn btn-warning btn-lg">Order History</a>
         </div>
     </div>
@@ -28,7 +28,11 @@
                 <form action="{{ route('cart.clear') }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-outline-danger" type="submit">Clear Cart</button>
+                    @if ($cartCount > 0)
+                        <button class="btn btn-outline-danger" type="submit">Clear Cart</button>
+                    @else
+                        <button class="btn btn-outline-danger" type="submit" disabled>Clear Cart</button>
+                    @endif
                 </form>
             </div>
 
@@ -101,17 +105,17 @@
             <h4 class="mb-3">Checkout</h4>
             <form action="{{ route('orders.store') }}" method="POST" class="vstack gap-3">
                 @csrf
-                <input type="text" name="customer_name" class="form-control" placeholder="Full name" value="{{ old('customer_name', auth()->user()->name) }}" required>
-                <input type="email" name="customer_email" class="form-control" placeholder="Email address" value="{{ old('customer_email', auth()->user()->email) }}">
-                <input type="text" name="customer_phone" class="form-control" placeholder="Phone number" value="{{ old('customer_phone', auth()->user()->phone) }}" required>
-                <select name="delivery_type" class="form-select" required>
+                <input type="text" name="customer_name" class="form-control mb-4" placeholder="Full name" value="{{ old('customer_name', auth()->user()->name) }}" required>
+                <input type="email" name="customer_email" class="form-control mb-4" placeholder="Email address" value="{{ old('customer_email', auth()->user()->email) }}">
+                <input type="text" name="customer_phone" class="form-control mb-4" placeholder="Phone number" value="{{ old('customer_phone', auth()->user()->phone) }}" required>
+                <select name="delivery_type" class="form-select mb-4" required>
                     <option value="pickup">Pickup</option>
                     <option value="delivery">Delivery</option>
                 </select>
-                <textarea name="delivery_address" class="form-control" rows="3" placeholder="Delivery address if needed">{{ old('delivery_address') }}</textarea>
-                <textarea name="notes" class="form-control" rows="3" placeholder="Special instructions">{{ old('notes') }}</textarea>
+                <textarea name="delivery_address" class="form-control mb-4" rows="3" placeholder="Delivery address if needed">{{ old('delivery_address') }}</textarea>
+                <textarea name="notes" class="form-control mb-4" rows="3" placeholder="Special instructions">{{ old('notes') }}</textarea>
 
-                <div class="border rounded-4 p-3 bg-light">
+                <div class="border rounded-4 p-3 bg-light mb-4">
                     <div class="fw-bold mb-2">Payment method</div>
                     <select name="payment_method" class="form-select mb-2" required>
                         <option value="demo_card" {{ old('payment_method', 'demo_card') === 'demo_card' ? 'selected' : '' }}>Demo card payment</option>
@@ -121,8 +125,12 @@
                     <input type="text" name="payment_reference" class="form-control" placeholder="Payment reference (optional)" value="{{ old('payment_reference') }}">
                     <div class="small text-muted mt-2">Demo card payment marks the order as paid for testing the flow.</div>
                 </div>
-
-                <button type="submit" class="btn btn-primary btn-lg">Pay {{ moneyFormat($total) }} and Place Order</button>
+            
+                @if ($cartCount > 0)
+                    <button type="submit" class="btn btn-primary btn-sm">Pay {{ moneyFormat($total) }} and Place Order</button>
+                @else
+                    <button type="submit" class="btn btn-primary btn-sm" disabled>Pay {{ moneyFormat($total) }} and Place Order</button>
+                @endif
             </form>
         </div>
     </div>

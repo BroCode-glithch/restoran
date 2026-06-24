@@ -3,11 +3,23 @@
 
     // Spinner
     var spinner = function () {
-        setTimeout(function () {
-            if ($('#spinner').length > 0) {
-                $('#spinner').removeClass('show');
-            }
-        }, 1);
+        var $spinner = $('#spinner');
+
+        if ($spinner.length === 0) {
+            return;
+        }
+
+        var hideSpinner = function () {
+            setTimeout(function () {
+                $spinner.removeClass('show');
+            }, 180);
+        };
+
+        if (document.readyState === 'complete') {
+            hideSpinner();
+        } else {
+            $(window).on('load', hideSpinner);
+        }
     };
     spinner();
     
@@ -81,7 +93,6 @@
         $('.btn-play').click(function () {
             $videoSrc = $(this).data("src");
         });
-        console.log($videoSrc);
 
         $('#videoModal').on('shown.bs.modal', function (e) {
             $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");
