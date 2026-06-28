@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Create Account')
+@section('title', 'Create Account | ' . config('app.name'))
 
 @section('content')
 <div class="mb-4">
@@ -20,11 +20,12 @@
 <form method="POST" action="{{ route('register') }}" class="vstack gap-3">
     @csrf
 
+    <label for="name" class="form-label fw-semibold text-dark">Full Name</label>
     <div class="form-floating">
         <input
             id="name"
             type="text"
-            class="form-control @error('name') is-invalid @enderror"
+            class="form-control @error('name') is-invalid @enderror mb-4"
             name="name"
             value="{{ old('name') }}"
             placeholder="Full name"
@@ -38,11 +39,12 @@
         @enderror
     </div>
 
+    <label for="email" class="form-label fw-semibold text-dark">Email Address</label>
     <div class="form-floating">
         <input
             id="email"
             type="email"
-            class="form-control @error('email') is-invalid @enderror"
+            class="form-control @error('email') is-invalid @enderror mb-4"
             name="email"
             value="{{ old('email') }}"
             placeholder="Email address"
@@ -60,7 +62,7 @@
         <input
             id="password"
             type="password"
-            class="form-control @error('password') is-invalid @enderror"
+            class="form-control @error('password') is-invalid @enderror mb-4"
             name="password"
             placeholder="Create a password"
             required
@@ -76,7 +78,7 @@
         <input
             id="password-confirm"
             type="password"
-            class="form-control"
+            class="form-control mb-4"
             name="password_confirmation"
             placeholder="Repeat your password"
             required

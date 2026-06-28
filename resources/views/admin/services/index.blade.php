@@ -25,9 +25,9 @@
                 @if(isset($editingService) && $editingService)
                     @method('PUT')
                 @endif
-                <input type="text" name="icon" class="form-control" placeholder="Icon class e.g. fa-solid fa-bowl-food" value="{{ old('icon', optional($editingService)->icon) }}" required>
-                <input type="text" name="title" class="form-control" placeholder="Service title" value="{{ old('title', optional($editingService)->title) }}" required>
-                <textarea name="description" class="form-control" rows="5" placeholder="Service description">{{ old('description', optional($editingService)->description) }}</textarea>
+                <input type="text" name="icon" class="form-control mb-4" placeholder="Icon class e.g. fa-solid fa-bowl-food" value="{{ old('icon', optional($editingService)->icon) }}" required>
+                <input type="text" name="title" class="form-control mb-4" placeholder="Service title" value="{{ old('title', optional($editingService)->title) }}" required>
+                <textarea name="description" class="form-control mb-4" rows="5" placeholder="Service description">{{ old('description', optional($editingService)->description) }}</textarea>
                 <button class="btn btn-primary" type="submit">{{ isset($editingService) && $editingService ? 'Update Service' : 'Save Service' }}</button>
             </form>
 

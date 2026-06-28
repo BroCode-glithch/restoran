@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Reset Password')
+@section('title', 'Reset Password | ' . config('app.name'))
 
 @section('content')
 <div class="mb-4">

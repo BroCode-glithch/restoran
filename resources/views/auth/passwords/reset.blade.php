@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Reset Password')
+@section('title', 'Reset Password | ' . config('app.name'))
 
 @section('content')
 <div class="mb-4">
@@ -22,7 +22,7 @@
 <form method="POST" action="{{ route('password.email') }}" class="vstack gap-3">
     @csrf
 
-    <div class="form-floating">
+    <div class="form-floating mb-4">
         <input
             id="email"
             type="email"

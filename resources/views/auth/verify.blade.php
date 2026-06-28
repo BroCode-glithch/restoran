@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Verify Email')
+@section('title', 'Verify Email | ' . config('app.name'))
 
 @section('content')
 <div class="mb-4">

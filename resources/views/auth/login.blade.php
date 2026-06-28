@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Sign In')
+@section('title', 'Sign In | ' . config('app.name'))
 
 @section('content')
 <div class="mb-4">
@@ -20,10 +20,11 @@
 <form method="POST" action="{{ route('login') }}" class="vstack gap-3">
     @csrf
 
+    <label for="email" class="form-label fw-semibold text-dark">Email address</label>
     <div class="form-floating">
         <input
             type="email"
-            class="form-control @error('email') is-invalid @enderror"
+            class="form-control @error('email') is-invalid @enderror mb-4"
             id="email"
             name="email"
             value="{{ old('email') }}"
@@ -42,14 +43,14 @@
         <div class="input-group">
             <input
                 type="password"
-                class="form-control @error('password') is-invalid @enderror"
+                class="form-control @error('password') is-invalid @enderror mb-4"
                 id="password"
                 name="password"
                 placeholder="Password"
                 required>
             <button
                 type="button"
-                class="btn btn-outline-secondary auth-icon-btn"
+                class="btn btn-outline-secondary auth-icon-btn mb-4"
                 id="togglePassword"
                 aria-label="Toggle password visibility">
                 <i class="fas fa-eye"></i>
