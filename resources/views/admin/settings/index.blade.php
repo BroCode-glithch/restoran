@@ -163,8 +163,12 @@
 
                 </select>
             </div>
-            <div class="col-md-4"><input type="number" step="0.01" name="settings[operations.delivery_fee]" class="form-control" placeholder="Delivery fee" value="{{ old('settings.operations.delivery_fee', $settings['operations.delivery_fee'] ?? '0') }}"></div>
+            <div class="col-md-4"><input type="number" step="0.01" name="settings[operations.delivery_fee_inside_school]" class="form-control" placeholder="Delivery fee inside school" value="{{ old('settings.operations.delivery_fee_inside_school', $settings['operations.delivery_fee_inside_school'] ?? ($settings['operations.delivery_fee'] ?? '0')) }}"></div>
+            <div class="col-md-4"><input type="number" step="0.01" name="settings[operations.delivery_fee_outside_school]" class="form-control" placeholder="Delivery fee outside school" value="{{ old('settings.operations.delivery_fee_outside_school', $settings['operations.delivery_fee_outside_school'] ?? $settings['operations.delivery_fee_inside_school'] ?? ($settings['operations.delivery_fee'] ?? '0')) }}"></div>
             <div class="col-md-4"><input type="text" name="settings[operations.business_hours]" class="form-control" placeholder="Business hours" value="{{ old('settings.operations.business_hours', $settings['operations.business_hours'] ?? '') }}"></div>
+            <div class="col-12">
+                <div class="alert alert-info mb-0">Set the lower fee for school premises delivery and the higher fee for addresses outside the school. Managers or admins can adjust these values here.</div>
+            </div>
             <div class="col-md-6 form-check ps-5">
                 <input type="hidden" name="settings[operations.pickup_enabled]" value="0">
                 <input class="form-check-input" type="checkbox" name="settings[operations.pickup_enabled]" value="1" id="pickup_enabled" {{ ($settings['operations.pickup_enabled'] ?? '1') === '1' ? 'checked' : '' }}>

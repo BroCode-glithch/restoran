@@ -34,7 +34,7 @@ class OrderWorkflowService
             }
 
             $deliveryFee = !empty($payload['delivery_type']) && $payload['delivery_type'] === 'delivery'
-                ? (float) getSetting('operations.delivery_fee', 0)
+                ? app(CartService::class)->deliveryFeeFor(isset($payload['delivery_area']) ? $payload['delivery_area'] : 'inside_school')
                 : 0;
 
             $order = Order::query()->create([
@@ -45,6 +45,7 @@ class OrderWorkflowService
                 'customer_email' => $payload['customer_email'],
                 'customer_phone' => $payload['customer_phone'],
                 'delivery_type' => $payload['delivery_type'],
+                'delivery_area' => isset($payload['delivery_area']) ? $payload['delivery_area'] : null,
                 'status' => 'placed',
                 'payment_status' => 'pending',
                 'payment_method' => $paymentMethod,

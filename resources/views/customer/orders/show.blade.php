@@ -69,6 +69,9 @@
             <div class="mb-2"><span class="text-muted">Email:</span> <strong>{{ $order->customer_email ?: 'N/A' }}</strong></div>
             <div class="mb-2"><span class="text-muted">Phone:</span> <strong>{{ $order->customer_phone }}</strong></div>
             <div class="mb-2"><span class="text-muted">Delivery:</span> <strong>{{ ucfirst($order->delivery_type) }}</strong></div>
+            @if($order->delivery_type === 'delivery' && $order->delivery_area)
+                <div class="mb-2"><span class="text-muted">Delivery Area:</span> <strong>{{ str_replace('_', ' ', $order->delivery_area) }}</strong></div>
+            @endif
             <div class="mb-2"><span class="text-muted">Address:</span> <strong>{{ $order->delivery_address ?: 'Pickup order' }}</strong></div>
 
             @php

@@ -67,7 +67,7 @@ class OrderController extends Controller
 
         $checkoutUrl = $korapayService->initializeCheckout(
             $order,
-            route('orders.show', $order),
+            route('orders.thanks', $order),
             route('payments.korapay.webhook')
         );
 
@@ -84,6 +84,24 @@ class OrderController extends Controller
         }
 
         return redirect()->away($checkoutUrl);
+    }
+
+    public function thanks(Request $request, Order $order)
+    {
+        $this->authorizeOrder($order);
+
+        $order->load(['items', 'statusHistories']);
+
+        if ($order->payment_method === 'korapay' && $request->filled('reference') && $order->payment_status !== 'paid') {
+            session()->flash('swal', [
+                'type' => 'info',
+                'title' => 'Payment verification',
+                'message' => 'Thanks for your order. We are verifying the Korapay payment now.',
+                'ok_text' => 'OK',
+            ]);
+        }
+
+        return view('customer.orders.thanks', compact('order'));
     }
 
     public function korapayWebhook(Request $request, WalletService $walletService)
@@ -145,6 +163,7 @@ class OrderController extends Controller
             'customer_email' => ['nullable', 'email', 'max:255'],
             'customer_phone' => ['required', 'string', 'max:30'],
             'delivery_type' => ['required', 'in:pickup,delivery'],
+            'delivery_area' => ['nullable', 'required_if:delivery_type,delivery', 'in:inside_school,outside_school'],
             'delivery_address' => ['nullable', 'string', 'max:1000'],
             'notes' => ['nullable', 'string', 'max:1000'],
             'payment_method' => ['required', 'in:korapay,wallet'],
@@ -166,7 +185,7 @@ class OrderController extends Controller
             'ok_text' => 'OK',
         ]);
 
-        return redirect()->route('orders.show', $order);
+        return redirect()->route('orders.thanks', $order);
     }
 
     public function updateStatus(Request $request, Order $order, OrderWorkflowService $orderWorkflowService)

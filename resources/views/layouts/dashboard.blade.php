@@ -105,7 +105,10 @@
                     <div class="fw-semibold">{{ $user->name }}</div>
                     <div class="small text-muted text-truncate">{{ $user->email }}</div>
                     @if($role === 'customer')
-                        <div class="small text-muted mt-2">Wallet balance: <strong>{{ moneyFormat($user->walletBalance(), $currency) }}</strong></div>
+                        <div class="small text-muted mt-2">Wallet balance: 
+                            <i class="fas fa-wallet text-success"></i>
+                            <strong>{{ moneyFormat($user->walletBalance(), $currency) }}</strong>
+                        </div>
                     @endif
                 </div>
             @endif
@@ -141,6 +144,17 @@
 
                 <div class="d-flex align-items-center gap-2">
                     @if($user)
+                        @if($role === 'customer')
+                            <div class="mt-2">
+                                <a href="{{ route('wallet.index') }}"
+                                class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-light text-decoration-none">
+                                    <i class="fas fa-wallet text-success"></i>
+                                    <div class="text-start">
+                                        <strong>{{ moneyFormat($user->walletBalance(), $currency) }}</strong>
+                                    </div>
+                                </a>
+                            </div>
+                        @endif
                         <div class="dropdown">
                             <button class="btn btn-light position-relative dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa-regular fa-bell"></i>

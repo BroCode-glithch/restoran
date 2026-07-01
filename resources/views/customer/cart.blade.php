@@ -92,9 +92,15 @@
         <div class="ops-card p-4 mb-4">
             <h4 class="mb-3">Order Summary</h4>
             <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><strong>{{ moneyFormat($subtotal) }}</strong></div>
-            <div class="d-flex justify-content-between mb-2"><span>Delivery Fee</span><strong>{{ moneyFormat($deliveryFee) }}</strong></div>
+            <div class="d-flex justify-content-between mb-2">
+                <span>Delivery Fee</span>
+                <strong id="deliveryFeePreview">{{ moneyFormat($deliveryFee) }}</strong>
+            </div>
             <hr>
-            <div class="d-flex justify-content-between fs-5"><span>Total</span><strong>{{ moneyFormat($total) }}</strong></div>
+            <div class="d-flex justify-content-between fs-5">
+                <span>Total</span>
+                <strong id="cartTotalPreview">{{ moneyFormat($total) }}</strong>
+            </div>
             <div class="alert alert-light border-0 mt-3 mb-0">
                 <div class="fw-semibold mb-1">Payment ready</div>
                 <div class="small text-muted">Use Korapay for direct payment or your wallet if you already topped up funds.</div>
@@ -113,6 +119,14 @@
                     <option value="pickup">Pickup</option>
                     <option value="delivery">Delivery</option>
                 </select>
+                <div id="deliveryAreaWrap" class="border rounded-4 p-3 bg-light mb-4 {{ old('delivery_type', 'pickup') === 'delivery' ? '' : 'd-none' }}">
+                    <div class="fw-bold mb-2">Delivery area</div>
+                    <select name="delivery_area" class="form-select mb-2" id="deliveryAreaSelect">
+                        <option value="inside_school" {{ old('delivery_area', $deliveryArea) === 'inside_school' ? 'selected' : '' }}>Within school premises - {{ moneyFormat($deliveryFeeInside) }}</option>
+                        <option value="outside_school" {{ old('delivery_area') === 'outside_school' ? 'selected' : '' }}>Outside school premises - {{ moneyFormat($deliveryFeeOutside) }}</option>
+                    </select>
+                    <div class="small text-muted" id="deliveryAreaNote">{{ $deliveryAreaNote }}</div>
+                </div>
                 <textarea name="delivery_address" class="form-control mb-4" rows="3" placeholder="Delivery address if needed">{{ old('delivery_address') }}</textarea>
                 <textarea name="notes" class="form-control mb-4" rows="3" placeholder="Special instructions">{{ old('notes') }}</textarea>
 
@@ -135,4 +149,74 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+    @media (max-width: 575.98px) {
+        .checkout-action-row .btn {
+            width: 100%;
+        }
+
+        .checkout-action-row {
+            flex-direction: column;
+        }
+    }
+</style>
+@endpush
+
+<script>
+    (function () {
+        const deliveryTypeSelect = document.querySelector('select[name="delivery_type"]');
+        const deliveryAreaWrap = document.getElementById('deliveryAreaWrap');
+        const deliveryAreaSelect = document.getElementById('deliveryAreaSelect');
+        const deliveryAreaNote = document.getElementById('deliveryAreaNote');
+        const deliveryFeePreview = document.getElementById('deliveryFeePreview');
+        const cartTotalPreview = document.getElementById('cartTotalPreview');
+        const subtotal = {{ (float) $subtotal }};
+        const deliveryFees = {
+            inside_school: {{ (float) $deliveryFeeInside }},
+            outside_school: {{ (float) $deliveryFeeOutside }},
+        };
+        const deliveryNotes = {
+            inside_school: 'For customers receiving orders inside the school premises.',
+            outside_school: 'For addresses outside the school gate and surrounding area.',
+        };
+
+        function formatMoney(amount) {
+            return amount.toFixed(2) + ' {{ getSetting('operations.currency', 'NGN') }}';
+        }
+
+        function updateSummary() {
+            const deliveryType = deliveryTypeSelect ? deliveryTypeSelect.value : 'pickup';
+            const deliveryArea = deliveryAreaSelect ? deliveryAreaSelect.value : 'inside_school';
+            const fee = deliveryType === 'delivery' ? (deliveryFees[deliveryArea] || 0) : 0;
+
+            if (deliveryAreaWrap) {
+                deliveryAreaWrap.classList.toggle('d-none', deliveryType !== 'delivery');
+            }
+
+            if (deliveryAreaNote) {
+                deliveryAreaNote.textContent = deliveryNotes[deliveryArea] || deliveryNotes.inside_school;
+            }
+
+            if (deliveryFeePreview) {
+                deliveryFeePreview.textContent = formatMoney(fee);
+            }
+
+            if (cartTotalPreview) {
+                cartTotalPreview.textContent = formatMoney(subtotal + fee);
+            }
+        }
+
+        if (deliveryTypeSelect) {
+            deliveryTypeSelect.addEventListener('change', updateSummary);
+        }
+
+        if (deliveryAreaSelect) {
+            deliveryAreaSelect.addEventListener('change', updateSummary);
+        }
+
+        updateSummary();
+    }());
+</script>
 @endsection

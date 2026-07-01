@@ -108,6 +108,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])
         ->name('orders.show')
         ->middleware('role:customer');
+    Route::get('/orders/{order}/thanks', [OrderController::class, 'thanks'])
+        ->name('orders.thanks')
+        ->middleware('role:customer');
     Route::get('/orders/{order}/korapay/checkout', [OrderController::class, 'korapayCheckout'])
         ->name('orders.korapay.checkout')
         ->middleware('role:customer');

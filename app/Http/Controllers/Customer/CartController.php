@@ -10,11 +10,18 @@ class CartController extends Controller
 {
     public function index(CartService $cartService)
     {
+        $deliveryArea = session('foodops.delivery_area', 'inside_school');
+
         return view('customer.cart', [
             'items' => $cartService->items(),
             'subtotal' => $cartService->subtotal(),
-            'deliveryFee' => $cartService->deliveryFee(),
-            'total' => $cartService->total(),
+            'deliveryArea' => $deliveryArea,
+            'deliveryFee' => $cartService->deliveryFeeFor($deliveryArea),
+            'deliveryFeeInside' => $cartService->deliveryFeeFor('inside_school'),
+            'deliveryFeeOutside' => $cartService->deliveryFeeFor('outside_school'),
+            'deliveryAreaLabel' => $cartService->deliveryAreaLabel($deliveryArea),
+            'deliveryAreaNote' => $cartService->deliveryAreaNote($deliveryArea),
+            'total' => $cartService->total($deliveryArea),
             'cartCount' => app(CartService::class)->count(),
         ]);
     }

@@ -228,6 +228,8 @@ return [
         'contact.address' => '123 Main Street, Anytown, USA',
         'operations.currency' => 'NGN',
         'operations.delivery_fee' => '0',
+        'operations.delivery_fee_inside_school' => '0',
+        'operations.delivery_fee_outside_school' => '0',
         'operations.pickup_enabled' => '1',
         'operations.delivery_enabled' => '1',
         'operations.business_hours' => 'Mon-Sat 09:00-21:00 | Sun 10:00-20:00',

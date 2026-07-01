@@ -11,8 +11,14 @@
             <p class="mb-0 text-white-50">Top up with Korapay, then use the wallet to settle orders without reopening checkout every time.</p>
         </div>
         <div class="col-lg-4 text-lg-end">
-            <a href="{{ route('cart.index') }}" class="btn btn-outline-light btn-lg me-2 m-2">Open Cart</a>
-            <a href="{{ route('orders.index') }}" class="btn btn-warning btn-lg">Order History</a>
+            <div class="row g-2 justify-content-lg-end">
+                <div class="col-6 col-lg-auto d-grid">
+                    <a href="{{ route('cart.index') }}" class="btn btn-outline-light btn-lg">Open Cart</a>
+                </div>
+                <div class="col-6 col-lg-auto d-grid">
+                    <a href="{{ route('orders.index') }}" class="btn btn-warning btn-lg">Order History</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -29,8 +35,8 @@
             <h4 class="mb-3">Top Up Wallet</h4>
             <form action="{{ route('wallet.topup') }}" method="POST" class="vstack gap-3">
                 @csrf
-                <input type="number" name="amount" min="100" step="1" class="form-control mb-4 gap-2" placeholder="Top-up amount" value="{{ old('amount') }}" required>
-                <button type="submit" class="btn btn-primary">Fund with Korapay</button>
+                <input type="number" name="amount" min="100" step="1" class="form-control mb-4" placeholder="Top-up amount" value="{{ old('amount') }}" required>
+                <button type="submit" class="btn btn-primary w-100">Fund with Korapay</button>
             </form>
             <div class="small text-muted mt-3">Once payment completes, the wallet will be credited automatically from the Korapay webhook.</div>
         </div>

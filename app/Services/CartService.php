@@ -8,6 +8,37 @@ class CartService
 {
     protected $sessionKey = 'foodops.cart';
 
+    public function deliveryFeeFor($deliveryArea = null)
+    {
+        $deliveryArea = $deliveryArea ?: 'inside_school';
+        $insideFee = (float) getSetting('operations.delivery_fee_inside_school', getSetting('operations.delivery_fee', 0));
+        $outsideFee = (float) getSetting('operations.delivery_fee_outside_school', max($insideFee, 0));
+
+        return $deliveryArea === 'outside_school' ? $outsideFee : $insideFee;
+    }
+
+    public function deliveryAreaLabel($deliveryArea = null)
+    {
+        $deliveryArea = $deliveryArea ?: 'inside_school';
+
+        if ($deliveryArea === 'outside_school') {
+            return 'Outside school premises';
+        }
+
+        return 'Within school premises';
+    }
+
+    public function deliveryAreaNote($deliveryArea = null)
+    {
+        $deliveryArea = $deliveryArea ?: 'inside_school';
+
+        if ($deliveryArea === 'outside_school') {
+            return 'For addresses outside the school gate and surrounding area.';
+        }
+
+        return 'For customers receiving orders inside the school premises.';
+    }
+
     public function items()
     {
         return session()->get($this->sessionKey, []);
@@ -90,11 +121,11 @@ class CartService
 
     public function deliveryFee()
     {
-        return (float) getSetting('operations.delivery_fee', 0);
+        return $this->deliveryFeeFor('inside_school');
     }
 
-    public function total()
+    public function total($deliveryArea = null)
     {
-        return $this->subtotal() + $this->deliveryFee();
+        return $this->subtotal() + $this->deliveryFeeFor($deliveryArea);
     }
 }
