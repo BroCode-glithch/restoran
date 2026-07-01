@@ -156,6 +156,12 @@
                             </tbody>
                         </table>
                     </div>
+
+                    @if(isset($table['pagination']))
+                        <div class="mt-3">
+                            {{ $table['pagination']->withQueryString()->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         @endforeach

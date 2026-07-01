@@ -56,7 +56,7 @@ class UserController extends Controller
             'message' => 'Role updated for ' . $user->email . ' to ' . $user->role,
         ]);
 
-        toastr()->success('User updated.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('User updated.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.users.index');
     }

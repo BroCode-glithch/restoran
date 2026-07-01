@@ -127,7 +127,7 @@
                 <div class="container py-5">
                     <div class="row g-5">
                         <div class="col-lg-3 col-md-6">
-                            <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Company</h4>
+                            <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">{{ getSetting('footer.company_title', 'Company') }}</h4>
                             <a class="btn btn-link" href="{{ route('about') }}">About Us</a>
                             <a class="btn btn-link" href="{{ route('services') }}">Services</a>
                             <a class="btn btn-link" href="{{ route('booking') }}">Reservation</a>
@@ -139,23 +139,23 @@
                             <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>{{ getSetting('contact.address') }}</p>
                             <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>{{ getSetting('contact.phone') }}</p>
                             <p class="mb-2"><i class="fa fa-envelope me-3"></i>{{ getSetting('contact.email') }}</p>
-                            <div class="d-flex pt-2">
-                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <div class="d-flex pt-2 flex-wrap gap-2">
+                                @if(getSetting('footer.twitter_url'))<a class="btn btn-outline-light btn-social" href="{{ getSetting('footer.twitter_url') }}" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>@endif
+                                @if(getSetting('footer.facebook_url'))<a class="btn btn-outline-light btn-social" href="{{ getSetting('footer.facebook_url') }}" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>@endif
+                                @if(getSetting('footer.youtube_url'))<a class="btn btn-outline-light btn-social" href="{{ getSetting('footer.youtube_url') }}" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>@endif
+                                @if(getSetting('footer.linkedin_url'))<a class="btn btn-outline-light btn-social" href="{{ getSetting('footer.linkedin_url') }}" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>@endif
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6">
                             <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Opening</h4>
                             <h5 class="text-light fw-normal">Monday - Saturday</h5>
-                            <p>09AM - 09PM</p>
+                            <p>{{ getSetting('operations.business_hours', '09AM - 09PM') }}</p>
                             <h5 class="text-light fw-normal">Sunday</h5>
-                            <p>10AM - 08PM</p>
+                            <p>{{ getSetting('operations.business_hours', '10AM - 08PM') }}</p>
                         </div>
                         <div class="col-lg-3 col-md-6">
                             <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Quick Links</h4>
-                            <p>Browse the menu, reserve a table, or check the latest testimonials.</p>
+                            <p>{{ getSetting('footer.quick_links_text', 'Browse the menu, reserve a table, or check the latest testimonials.') }}</p>
                             <div class="footer-menu">
                                 <a href="{{ route('home') }}">Home</a>
                                 <a href="{{ route('services') }}">Services</a>
@@ -169,8 +169,8 @@
                     <div class="copyright">
                         <div class="row">
                             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                                &copy; <a class="border-bottom" href="{{ base_url() }}">{{ getSetting('site_title') }}</a>, All Right Reserved.
-                                Designed By <a class="border-bottom" href="https://dailydewtech.com.ng/" target="_blank">DailyDew Tech Innovations</a><br><br>
+                                &copy; <a class="border-bottom" href="{{ base_url() }}">{{ getSetting('site_title') }}</a>, {{ getSetting('footer.copyright_text', 'All Rights Reserved.') }}
+                                <span class="d-inline-block mt-1 mt-md-0">{{ getSetting('footer.credit_text', 'Designed by DailyDew Tech Innovations') }} <a class="border-bottom" href="{{ getSetting('footer.credit_url', 'https://dailydewtech.com.ng') }}" target="_blank" rel="noopener">{{ getSetting('footer.credit_url', 'https://dailydewtech.com.ng') }}</a></span><br><br>
                             </div>
                             <div class="col-md-6 text-center text-md-end">
                                 <div class="footer-menu">

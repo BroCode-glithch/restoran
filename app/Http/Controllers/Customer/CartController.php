@@ -23,7 +23,7 @@ class CartController extends Controller
     {
         $cartService->update($productId, (int) $request->input('quantity', 1));
 
-        toastr()->success('Cart updated.', 'Success', ['timeOut' => 3000]);
+        toastr()->success('Cart updated.', ['timeOut' => 3000], 'Success');
 
         return redirect()->route('cart.index');
     }
@@ -32,7 +32,7 @@ class CartController extends Controller
     {
         $cartService->remove($productId);
 
-        toastr()->success('Item removed from cart.', 'Removed', ['timeOut' => 3000]);
+        toastr()->success('Item removed from cart.', ['timeOut' => 3000], 'Removed');
 
         return redirect()->route('cart.index');
     }
@@ -41,7 +41,7 @@ class CartController extends Controller
     {
         $cartService->clear();
 
-        toastr()->success('Cart cleared.', 'Success', ['timeOut' => 3000]);
+        toastr()->success('Cart cleared.', ['timeOut' => 3000], 'Success');
 
         return redirect()->route('cart.index');
     }

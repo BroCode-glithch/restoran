@@ -57,7 +57,7 @@ class ServiceController extends Controller
             'message' => 'Service created: ' . $data['title'],
         ]);
 
-        toastr()->success('Service created.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Service created.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.services.index');
     }
@@ -77,7 +77,7 @@ class ServiceController extends Controller
             'message' => 'Service updated: ' . $service->title,
         ]);
 
-        toastr()->success('Service updated.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Service updated.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.services.index');
     }
@@ -97,7 +97,7 @@ class ServiceController extends Controller
             'message' => 'Service deleted: ' . $title,
         ]);
 
-        toastr()->success('Service deleted.', 'Removed', ['timeOut' => 3000]);
+        toastr()->success('Service deleted.', ['timeOut' => 3000], 'Removed');
 
         return redirect()->route('admin.services.index');
     }

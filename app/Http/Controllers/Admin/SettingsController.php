@@ -47,7 +47,7 @@ class SettingsController extends Controller
             'message' => 'Business settings updated.',
         ]);
 
-        toastr()->success('Settings updated successfully.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Settings updated successfully.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.settings.index');
     }
@@ -72,6 +72,10 @@ class SettingsController extends Controller
 
         if (strpos($key, 'integrations.') === 0) {
             return 'integrations';
+        }
+
+        if (strpos($key, 'footer.') === 0) {
+            return 'footer';
         }
 
         return 'general';

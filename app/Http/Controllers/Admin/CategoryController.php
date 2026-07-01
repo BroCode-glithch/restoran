@@ -52,7 +52,7 @@ class CategoryController extends Controller
             'message' => 'Category created: ' . $data['name'],
         ]);
 
-        toastr()->success('Category created.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Category created.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.categories.index');
     }
@@ -75,7 +75,7 @@ class CategoryController extends Controller
             'message' => 'Category updated: ' . $category->name,
         ]);
 
-        toastr()->success('Category updated.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Category updated.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.categories.index');
     }
@@ -94,7 +94,7 @@ class CategoryController extends Controller
             'message' => 'Category deleted: ' . $category->name,
         ]);
 
-        toastr()->success('Category deleted.', 'Removed', ['timeOut' => 3000]);
+        toastr()->success('Category deleted.', ['timeOut' => 3000], 'Removed');
 
         return redirect()->route('admin.categories.index');
     }

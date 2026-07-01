@@ -117,6 +117,21 @@
         </div>
     </div>
 
+    <div class="ops-setting-card p-4 mb-4">
+        <h4 class="mb-3">Footer</h4>
+        <div class="row g-3">
+            <div class="col-md-6"><input type="text" name="settings[footer.company_title]" class="form-control" placeholder="Footer company title" value="{{ old('settings.footer.company_title', $settings['footer.company_title'] ?? 'Company') }}"></div>
+            <div class="col-md-6"><input type="text" name="settings[footer.quick_links_text]" class="form-control" placeholder="Footer quick links text" value="{{ old('settings.footer.quick_links_text', $settings['footer.quick_links_text'] ?? 'Browse the menu, reserve a table, or check the latest testimonials.') }}"></div>
+            <div class="col-md-6"><input type="text" name="settings[footer.copyright_text]" class="form-control" placeholder="Copyright text" value="{{ old('settings.footer.copyright_text', $settings['footer.copyright_text'] ?? 'All Rights Reserved.') }}"></div>
+            <div class="col-md-6"><input type="text" name="settings[footer.credit_text]" class="form-control" placeholder="Footer credit text" value="{{ old('settings.footer.credit_text', $settings['footer.credit_text'] ?? 'Designed by DailyDew Tech Innovations') }}"></div>
+            <div class="col-md-6"><input type="url" name="settings[footer.credit_url]" class="form-control" placeholder="Footer credit URL" value="{{ old('settings.footer.credit_url', $settings['footer.credit_url'] ?? 'https://dailydewtech.com.ng') }}"></div>
+            <div class="col-md-6"><input type="url" name="settings[footer.twitter_url]" class="form-control" placeholder="Twitter URL" value="{{ old('settings.footer.twitter_url', $settings['footer.twitter_url'] ?? '') }}"></div>
+            <div class="col-md-6"><input type="url" name="settings[footer.facebook_url]" class="form-control" placeholder="Facebook URL" value="{{ old('settings.footer.facebook_url', $settings['footer.facebook_url'] ?? '') }}"></div>
+            <div class="col-md-6"><input type="url" name="settings[footer.youtube_url]" class="form-control" placeholder="YouTube URL" value="{{ old('settings.footer.youtube_url', $settings['footer.youtube_url'] ?? '') }}"></div>
+            <div class="col-md-6"><input type="url" name="settings[footer.linkedin_url]" class="form-control" placeholder="LinkedIn URL" value="{{ old('settings.footer.linkedin_url', $settings['footer.linkedin_url'] ?? '') }}"></div>
+        </div>
+    </div>
+
     <div class="text-end">
         <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
     </div>

@@ -737,12 +737,14 @@ class DashboardController extends Controller
 
     protected function developerTables()
     {
+        $logs = SystemLog::query()->where('business_id', currentBusinessId())->latest()->paginate(10);
+
         return [
             [
                 'title' => 'Recent Logs',
                 'description' => 'Review events, order actions and configuration changes.',
                 'columns' => ['Level', 'Category', 'Message', 'Time'],
-                'rows' => SystemLog::query()->where('business_id', currentBusinessId())->latest()->take(10)->get()->map(function ($log) {
+                'rows' => $logs->getCollection()->map(function ($log) {
                     return [
                         '<span class="badge bg-dark">' . strtoupper($log->level) . '</span>',
                         ucfirst($log->category),
@@ -750,6 +752,7 @@ class DashboardController extends Controller
                         optional($log->created_at)->diffForHumans(),
                     ];
                 })->toArray(),
+                'pagination' => $logs,
                 'empty' => 'No logs yet.',
                 'action_route' => 'developer.logs.index',
                 'action_label' => 'Open Logs',

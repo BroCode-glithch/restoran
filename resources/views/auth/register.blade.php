@@ -14,7 +14,7 @@
 </div>
 
 <div class="mb-4">
-    <div class="auth-divider"><span>or use your details</span></div>
+    <div class="auth-divider"><span>Create your account</span></div>
 </div>
 
 <form method="POST" action="{{ route('register') }}" class="vstack gap-3">

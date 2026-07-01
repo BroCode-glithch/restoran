@@ -105,7 +105,7 @@ class RegisterController extends Controller
             'message' => 'User registered: ' . $user->email,
         ]);
 
-        toastr()->success('Registration successful! You can now log in.', 'Welcome!', ['timeOut' => 5000]);
+        toastr()->success('Registration successful! You can now log in.', ['timeOut' => 5000], 'Welcome!');
 
         $intendedRoute = $this->pullIntendedRoute($user);
 

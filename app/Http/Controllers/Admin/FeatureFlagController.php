@@ -43,7 +43,7 @@ class FeatureFlagController extends Controller
             'message' => 'Feature flag created: ' . $data['key'],
         ]);
 
-        toastr()->success('Feature flag saved.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Feature flag saved.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.flags.index');
     }
@@ -65,7 +65,7 @@ class FeatureFlagController extends Controller
             'message' => 'Feature flag updated: ' . $flag->key,
         ]);
 
-        toastr()->success('Feature flag updated.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Feature flag updated.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.flags.index');
     }
@@ -84,7 +84,7 @@ class FeatureFlagController extends Controller
             'message' => 'Feature flag deleted: ' . $flag->key,
         ]);
 
-        toastr()->success('Feature flag deleted.', 'Removed', ['timeOut' => 3000]);
+        toastr()->success('Feature flag deleted.', ['timeOut' => 3000], 'Removed');
 
         return redirect()->route('admin.flags.index');
     }

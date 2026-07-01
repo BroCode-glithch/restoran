@@ -38,8 +38,9 @@
             min-height: 100vh;
             display: grid;
             place-items: center;
-            padding: 1.25rem;
+            padding: 1.5rem;
             position: relative;
+            overflow: hidden;
         }
 
         .auth-shell::before,
@@ -86,13 +87,13 @@
         }
 
         .auth-orb-left {
-            top: 6%;
-            left: 6%;
+            top: 7%;
+            left: 5%;
         }
 
         .auth-orb-right {
-            right: 7%;
-            bottom: 8%;
+            right: 6%;
+            bottom: 7%;
             animation-delay: 0.9s;
         }
 
@@ -108,6 +109,7 @@
             border-top: 4px solid var(--auth-primary);
             animation: authRiseIn 0.45s ease both;
             backdrop-filter: blur(14px);
+            margin-inline: auto;
         }
 
         .auth-card .form-label {

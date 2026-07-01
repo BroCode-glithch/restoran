@@ -66,7 +66,7 @@ class LoginController extends Controller
             'message' => 'User logged in: ' . $user->email,
         ]);
 
-        toastr()->success('Logged in successfully!', 'Welcome!', ['timeOut' => 5000]);
+        toastr()->success('Logged in successfully!', ['timeOut' => 5000], 'Welcome!');
 
         $intendedRoute = $this->pullIntendedRoute($user);
 

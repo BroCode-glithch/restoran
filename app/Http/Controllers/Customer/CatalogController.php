@@ -42,7 +42,7 @@ class CatalogController extends Controller
         $quantity = (int) $request->input('quantity', 1);
         $cartService->add($product, $quantity);
 
-        toastr()->success($product->name . ' added to cart.', 'Cart updated', ['timeOut' => 3000]);
+        toastr()->success($product->name . ' added to cart.', ['timeOut' => 3000], 'Cart updated');
 
         return redirect()->route('catalog.index');
     }

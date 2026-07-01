@@ -58,7 +58,7 @@ class ProductController extends Controller
             'message' => 'Product created: ' . $data['name'],
         ]);
 
-        toastr()->success('Product created.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Product created.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.products.index');
     }
@@ -87,7 +87,7 @@ class ProductController extends Controller
             'message' => 'Product updated: ' . $product->name,
         ]);
 
-        toastr()->success('Product updated.', 'Saved', ['timeOut' => 3000]);
+        toastr()->success('Product updated.', ['timeOut' => 3000], 'Saved');
 
         return redirect()->route('admin.products.index');
     }
@@ -107,7 +107,7 @@ class ProductController extends Controller
             'message' => 'Product deleted: ' . $product->name,
         ]);
 
-        toastr()->success('Product deleted.', 'Removed', ['timeOut' => 3000]);
+        toastr()->success('Product deleted.', ['timeOut' => 3000], 'Removed');
 
         return redirect()->route('admin.products.index');
     }
@@ -137,8 +137,8 @@ class ProductController extends Controller
 
         toastr()->success(
             $availability ? 'Selected products are now available.' : 'Selected products are now hidden.',
-            'Bulk update',
-            ['timeOut' => 3000]
+            ['timeOut' => 3000],
+            'Bulk update'
         );
 
         return redirect()->route('admin.products.index');

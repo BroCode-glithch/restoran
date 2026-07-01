@@ -68,7 +68,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class)->except(['show', 'create']);
         Route::post('products/bulk-availability', [ProductController::class, 'bulkAvailability'])->name('products.bulk-availability');
         Route::resource('categories', CategoryController::class)->except(['show', 'create']);
+    });
 
+    Route::prefix('admin')->name('admin.')->middleware('role:manager,super_admin,developer')->group(function () {
         Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
         Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
     });

@@ -47,7 +47,7 @@ class OrderController extends Controller
         $items = $cartService->items();
 
         if (empty($items)) {
-            toastr()->error('Your cart is empty.', 'Checkout blocked', ['timeOut' => 3000]);
+            toastr()->error('Your cart is empty.', ['timeOut' => 3000], 'Checkout blocked');
             return redirect()->route('catalog.index');
         }
 
@@ -65,7 +65,7 @@ class OrderController extends Controller
         $order = $orderWorkflowService->placeOrder($validated, $items, auth()->user());
         $cartService->clear();
 
-        toastr()->success('Order placed successfully.', 'Order received', ['timeOut' => 3000]);
+        toastr()->success('Order placed successfully.', ['timeOut' => 3000], 'Order received');
 
         return redirect()->route('orders.show', $order);
     }
@@ -81,7 +81,7 @@ class OrderController extends Controller
 
         $orderWorkflowService->advanceStatus($order, $validated['status'], auth()->user(), isset($validated['note']) ? $validated['note'] : null);
 
-        toastr()->success('Order status updated.', 'Status saved', ['timeOut' => 3000]);
+        toastr()->success('Order status updated.', ['timeOut' => 3000], 'Status saved');
 
         return redirect()->back();
     }

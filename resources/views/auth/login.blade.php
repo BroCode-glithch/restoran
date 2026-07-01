@@ -14,7 +14,7 @@
 </div>
 
 <div class="mb-4">
-    <div class="auth-divider"><span>or use email</span></div>
+    <div class="auth-divider"><span>Secure access</span></div>
 </div>
 
 <form method="POST" action="{{ route('login') }}" class="vstack gap-3">

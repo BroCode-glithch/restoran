@@ -15,7 +15,7 @@ class LogoutController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        toastr()->success('You logged out successfully!', 'See you soon', ['timeOut' => 5000]);
+        toastr()->success('You logged out successfully!', ['timeOut' => 5000], 'See you soon');
         return redirect("/")->with("success", "You have successfully logged out!");
     }
 }
