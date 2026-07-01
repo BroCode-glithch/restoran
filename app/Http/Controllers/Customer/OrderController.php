@@ -48,6 +48,12 @@ class OrderController extends Controller
 
         if (empty($items)) {
             toastr()->error('Your cart is empty.', ['timeOut' => 3000], 'Checkout blocked');
+            session()->flash('swal', [
+                'type' => 'error',
+                'title' => 'Checkout blocked',
+                'message' => 'Your cart is empty.',
+                'ok_text' => 'OK',
+            ]);
             return redirect()->route('catalog.index');
         }
 
@@ -66,6 +72,12 @@ class OrderController extends Controller
         $cartService->clear();
 
         toastr()->success('Order placed successfully.', ['timeOut' => 3000], 'Order received');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Order received',
+            'message' => 'Order placed successfully.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('orders.show', $order);
     }
@@ -82,6 +94,12 @@ class OrderController extends Controller
         $orderWorkflowService->advanceStatus($order, $validated['status'], auth()->user(), isset($validated['note']) ? $validated['note'] : null);
 
         toastr()->success('Order status updated.', ['timeOut' => 3000], 'Status saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Status saved',
+            'message' => 'Order status updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->back();
     }

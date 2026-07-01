@@ -11,7 +11,7 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <script src="https://kit.fontawesome.com/cb417788eb.js" crossorigin="anonymous"></script>
 
-        <link href="img/favicon.ico" rel="icon">
+        <link href="{{ asset('favicon.ico') }}" rel="icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -197,6 +197,89 @@
         <script src="{{ asset('assets/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
         <script src="{{ asset('assets/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
         <script src="{{ asset('assets/js/main.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        @flasher_render()
+        <script src="{{ asset('vendor/flasher/flasher-toastr.min.js') }}"></script>
+
+        @if(session()->has('swal'))
+            <script>
+                (function() {
+                    try {
+                        var payload = @json(session('swal'));
+                        if (payload) {
+                            if (payload.confirm) {
+                                Swal.fire({
+                                    icon: payload.type || 'warning',
+                                    title: payload.title || '',
+                                    html: payload.message || '',
+                                    showCancelButton: true,
+                                    confirmButtonText: payload.confirmText || 'Yes',
+                                    cancelButtonText: payload.cancelText || 'Cancel',
+                                    allowOutsideClick: payload.allowOutsideClick ?? false,
+                                }).then(function(result){
+                                    if (result.isConfirmed && typeof window[payload.onConfirm] === 'function') {
+                                        try { window[payload.onConfirm](); } catch (e) { console.error(e); }
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: payload.type || 'success',
+                                    title: payload.title || '',
+                                    html: payload.message || '',
+                                    confirmButtonText: payload.ok_text || 'OK',
+                                    allowOutsideClick: payload.allowOutsideClick ?? false,
+                                });
+                            }
+                        }
+                    } catch (e) {
+                        console.error('SweetAlert payload error', e);
+                    }
+                }());
+            </script>
+        @endif
+        <script>
+            (function() {
+                try {
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var processed = new WeakSet();
+                        document.querySelectorAll('.flasher-progress').forEach(function(pb) {
+                            var container = pb.closest('div');
+                            if (!container) return;
+                            var alertEl = container.querySelector('.alert');
+                            if (!alertEl || processed.has(alertEl)) return;
+                            processed.add(alertEl);
+                            var type = alertEl.classList.contains('alert-success') ? 'success' : (alertEl.classList.contains('alert-danger') ? 'error' : (alertEl.classList.contains('alert-warning') ? 'warning' : 'info'));
+                            var message = alertEl.innerText.trim();
+                            try {
+                                if (type === 'success' || type === 'info') {
+                                    Swal.fire({
+                                        icon: type,
+                                        title: '',
+                                        html: message,
+                                        timer: 3000,
+                                        showConfirmButton: false,
+                                        allowOutsideClick: true
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: type,
+                                        title: '',
+                                        html: message,
+                                        confirmButtonText: 'OK',
+                                        allowOutsideClick: false
+                                    });
+                                }
+                            } catch (e) {
+                                console.error('Swal display error', e);
+                            }
+                            alertEl.remove();
+                        });
+                    });
+                } catch (e) {
+                    console.error('Flasher->Swal hook error', e);
+                }
+            }());
+        </script>
         @stack('scripts')
     </body>
 </html>

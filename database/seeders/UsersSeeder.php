@@ -35,6 +35,13 @@ class UsersSeeder extends Seeder
                 'phone' => '+2348010000002',
             ],
             [
+                'name' => 'Admin User',
+                'email' => 'admin@bettyskitchen.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'phone' => '+2348010000001',
+            ],
+            [
                 'name' => 'Business Manager',
                 'email' => 'manager@bettyskitchen.com',
                 'password' => Hash::make('password'),

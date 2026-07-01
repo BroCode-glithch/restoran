@@ -14,6 +14,12 @@ return [
             'dashboard_route' => 'super-admin.dashboard',
             'badge' => 'bg-danger text-white',
         ],
+        'admin' => [
+            'level' => 45,
+            'label' => 'Admin',
+            'dashboard_route' => 'admin.dashboard',
+            'badge' => 'bg-secondary text-white',
+        ],
         'manager' => [
             'level' => 40,
             'label' => 'Manager',
@@ -120,8 +126,10 @@ return [
         'manager' => [
             ['label' => 'Dashboard', 'route' => 'manager.dashboard', 'icon' => 'fa-solid fa-chart-column'],
             ['label' => 'Orders', 'route' => 'manager.orders.index', 'icon' => 'fa-solid fa-clipboard-list'],
+            ['label' => 'Reports', 'route' => 'manager.reports.index', 'icon' => 'fa-solid fa-chart-pie'],
             ['label' => 'Services', 'route' => 'admin.services.index', 'icon' => 'fa-solid fa-bell-concierge'],
             ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'fa-solid fa-utensils'],
+            ['label' => 'Inventory', 'route' => 'admin.inventory.index', 'icon' => 'fa-solid fa-boxes-stacked'],
             ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
         ],
         'super_admin' => [
@@ -130,6 +138,14 @@ return [
             ['label' => 'Services', 'route' => 'admin.services.index', 'icon' => 'fa-solid fa-bell-concierge'],
             ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
             ['label' => 'Flags', 'route' => 'admin.flags.index', 'icon' => 'fa-solid fa-flag'],
+        ],
+        'admin' => [
+            ['label' => 'Dashboard', 'route' => 'manager.dashboard', 'icon' => 'fa-solid fa-house'],
+            ['label' => 'Orders', 'route' => 'manager.orders.index', 'icon' => 'fa-solid fa-clipboard-list'],
+            ['label' => 'Reports', 'route' => 'manager.reports.index', 'icon' => 'fa-solid fa-chart-pie'],
+            ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'fa-solid fa-utensils'],
+            ['label' => 'Inventory', 'route' => 'admin.inventory.index', 'icon' => 'fa-solid fa-boxes-stacked'],
+            ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
         ],
         'developer' => [
             ['label' => 'Dashboard', 'route' => 'developer.dashboard', 'icon' => 'fa-solid fa-code'],
@@ -171,6 +187,13 @@ return [
             ['label' => 'Users', 'route' => 'admin.users.index', 'icon' => 'fa-solid fa-users-gear'],
             ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
             ['label' => 'Flags', 'route' => 'admin.flags.index', 'icon' => 'fa-solid fa-flag'],
+        ],
+        'admin' => [
+            ['label' => 'Home', 'route' => 'manager.dashboard', 'icon' => 'fa-solid fa-house'],
+            ['label' => 'Orders', 'route' => 'manager.orders.index', 'icon' => 'fa-solid fa-clipboard-list'],
+            ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'fa-solid fa-utensils'],
+            ['label' => 'Inventory', 'route' => 'admin.inventory.index', 'icon' => 'fa-solid fa-boxes-stacked'],
+            ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders'],
         ],
         'developer' => [
             ['label' => 'Home', 'route' => 'developer.dashboard', 'icon' => 'fa-solid fa-house'],

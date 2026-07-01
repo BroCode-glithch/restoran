@@ -67,6 +67,12 @@ class LoginController extends Controller
         ]);
 
         toastr()->success('Logged in successfully!', ['timeOut' => 5000], 'Welcome!');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Welcome!',
+            'message' => 'Logged in successfully!',
+            'ok_text' => 'OK',
+        ]);
 
         $intendedRoute = $this->pullIntendedRoute($user);
 

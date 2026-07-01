@@ -59,6 +59,12 @@ class ProductController extends Controller
         ]);
 
         toastr()->success('Product created.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Product created.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.products.index');
     }
@@ -88,6 +94,12 @@ class ProductController extends Controller
         ]);
 
         toastr()->success('Product updated.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Product updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.products.index');
     }
@@ -108,6 +120,12 @@ class ProductController extends Controller
         ]);
 
         toastr()->success('Product deleted.', ['timeOut' => 3000], 'Removed');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Removed',
+            'message' => 'Product deleted.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.products.index');
     }
@@ -140,6 +158,12 @@ class ProductController extends Controller
             ['timeOut' => 3000],
             'Bulk update'
         );
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Bulk update',
+            'message' => $availability ? 'Selected products are now available.' : 'Selected products are now hidden.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.products.index');
     }

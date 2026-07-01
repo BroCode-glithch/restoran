@@ -14,12 +14,14 @@ body.ops-body {
     color: #0f172b;
     min-height: 100vh;
     font-family: "Nunito", sans-serif;
+    overflow: hidden;
 }
 
 .ops-shell {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
     position: relative;
+    overflow: hidden;
 }
 
 .ops-sidebar {
@@ -32,6 +34,12 @@ body.ops-body {
     inset: 0 auto 0 0;
     z-index: 30;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.ops-sidebar::-webkit-scrollbar {
+    display: none;
 }
 
 .ops-sidebar-close {
@@ -88,6 +96,22 @@ body.ops-body {
     flex: 1;
     margin-left: 280px;
     min-width: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ops-main > main {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.ops-main > main::-webkit-scrollbar {
+    display: none;
 }
 
 .ops-topbar {
@@ -155,12 +179,45 @@ body.ops-body {
 
 .ops-hero {
     background:
-        linear-gradient(135deg, rgba(15, 23, 43, 0.98), rgba(15, 23, 43, 0.86)),
-        radial-gradient(circle at top right, rgba(254, 161, 22, 0.25), transparent 32%);
-    color: white;
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.92)),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(254, 161, 22, 0.10), transparent 30%);
+    color: #0f172b;
     border-radius: 30px;
     padding: 2rem;
     box-shadow: var(--ops-shadow);
+    border: 1px solid rgba(59, 130, 246, 0.10);
+}
+
+.ops-hero-soft {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(241, 245, 249, 0.92)),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 36%),
+        radial-gradient(circle at bottom left, rgba(254, 161, 22, 0.10), transparent 32%);
+    color: #0f172b;
+    border: 1px solid rgba(59, 130, 246, 0.14);
+}
+
+.ops-hero-soft .badge {
+    background: rgba(15, 23, 43, 0.06) !important;
+    color: #0f172b !important;
+}
+
+.ops-hero .text-white-50 {
+    color: #64748b !important;
+}
+
+.ops-hero .btn-outline-light {
+    color: #0f172b;
+    border-color: rgba(15, 23, 43, 0.18);
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.ops-hero .btn-outline-light:hover,
+.ops-hero .btn-outline-light:focus {
+    color: #ffffff;
+    background: var(--ops-primary);
+    border-color: var(--ops-primary);
 }
 
 .ops-hero .badge {
@@ -178,6 +235,15 @@ body.ops-body {
 .ops-table td,
 .ops-table th {
     vertical-align: middle;
+}
+
+.table-responsive {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.table-responsive::-webkit-scrollbar {
+    display: none;
 }
 
 .ops-bottom-nav {

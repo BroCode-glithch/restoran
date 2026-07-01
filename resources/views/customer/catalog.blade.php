@@ -3,12 +3,12 @@
 @section('title', 'Menu | ' . getSetting('branding.business_name', getSetting('site_title', config('app.name'))))
 
 @section('content')
-<div class="ops-hero mb-4">
+<div class="ops-hero ops-hero-soft mb-4">
     <div class="row g-3 align-items-end">
         <div class="col-lg-8">
-            <div class="badge bg-white text-dark px-3 py-2 rounded-pill mb-3">Customer Menu</div>
+            <div class="badge px-3 py-2 rounded-pill mb-3">Customer Menu</div>
             <h1 class="fw-bold mb-2">Browse menu and add items to your cart.</h1>
-            <p class="mb-0 text-white-50">Fresh meals, drinks and catering packages are ready for quick ordering.</p>
+            <p class="mb-0 text-muted">Fresh meals, drinks and catering packages are ready for quick ordering.</p>
         </div>
         <div class="col-lg-4 text-lg-end">
             <a href="{{ route('cart.index') }}" class="btn btn-warning btn-lg">Cart ({{ $cartCount }})</a>

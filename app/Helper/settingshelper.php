@@ -163,6 +163,12 @@ if (!function_exists('mediaUrl')) {
             return $path;
         }
 
+        // Backwards compatibility: map legacy `img/...` references (from seeders)
+        // to the `assets/img/...` public folder.
+        if (Str::startsWith($path, 'img/')) {
+            return asset('assets/' . ltrim($path, '/'));
+        }
+
         if (Str::startsWith($path, 'storage/')) {
             return asset($path);
         }

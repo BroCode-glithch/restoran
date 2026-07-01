@@ -58,6 +58,12 @@ class ServiceController extends Controller
         ]);
 
         toastr()->success('Service created.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Service created.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.services.index');
     }
@@ -78,6 +84,12 @@ class ServiceController extends Controller
         ]);
 
         toastr()->success('Service updated.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Service updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.services.index');
     }
@@ -98,6 +110,12 @@ class ServiceController extends Controller
         ]);
 
         toastr()->success('Service deleted.', ['timeOut' => 3000], 'Removed');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Removed',
+            'message' => 'Service deleted.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.services.index');
     }

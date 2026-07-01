@@ -53,6 +53,12 @@ class CategoryController extends Controller
         ]);
 
         toastr()->success('Category created.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Category created.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.categories.index');
     }
@@ -76,6 +82,12 @@ class CategoryController extends Controller
         ]);
 
         toastr()->success('Category updated.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Category updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.categories.index');
     }
@@ -95,6 +107,12 @@ class CategoryController extends Controller
         ]);
 
         toastr()->success('Category deleted.', ['timeOut' => 3000], 'Removed');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Removed',
+            'message' => 'Category deleted.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.categories.index');
     }

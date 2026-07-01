@@ -44,6 +44,12 @@ class FeatureFlagController extends Controller
         ]);
 
         toastr()->success('Feature flag saved.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Feature flag saved.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.flags.index');
     }
@@ -66,6 +72,12 @@ class FeatureFlagController extends Controller
         ]);
 
         toastr()->success('Feature flag updated.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Feature flag updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.flags.index');
     }
@@ -85,6 +97,12 @@ class FeatureFlagController extends Controller
         ]);
 
         toastr()->success('Feature flag deleted.', ['timeOut' => 3000], 'Removed');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Removed',
+            'message' => 'Feature flag deleted.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.flags.index');
     }

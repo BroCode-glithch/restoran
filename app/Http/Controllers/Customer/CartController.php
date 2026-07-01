@@ -24,6 +24,12 @@ class CartController extends Controller
         $cartService->update($productId, (int) $request->input('quantity', 1));
 
         toastr()->success('Cart updated.', ['timeOut' => 3000], 'Success');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Cart updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('cart.index');
     }
@@ -33,6 +39,12 @@ class CartController extends Controller
         $cartService->remove($productId);
 
         toastr()->success('Item removed from cart.', ['timeOut' => 3000], 'Removed');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Removed',
+            'message' => 'Item removed from cart.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('cart.index');
     }
@@ -42,6 +54,12 @@ class CartController extends Controller
         $cartService->clear();
 
         toastr()->success('Cart cleared.', ['timeOut' => 3000], 'Success');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Cart cleared.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('cart.index');
     }

@@ -276,8 +276,65 @@ class DashboardController extends Controller
             ],
             [
                 ['label' => 'Orders', 'route' => 'manager.orders.index', 'icon' => 'fa-solid fa-clipboard-list', 'variant' => 'btn-warning'],
+                ['label' => 'Reports', 'route' => 'manager.reports.index', 'icon' => 'fa-solid fa-chart-pie', 'variant' => 'btn-outline-light'],
                 ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'fa-solid fa-utensils', 'variant' => 'btn-outline-light'],
                 ['label' => 'Settings', 'route' => 'admin.settings.index', 'icon' => 'fa-solid fa-sliders', 'variant' => 'btn-outline-light'],
+            ]
+        );
+    }
+
+    public function admin()
+    {
+        $orders = $this->baseOrdersQuery();
+        $completedOrders = (clone $orders)->where('status', 'completed');
+        $revenueTrend = $this->buildSumTrendSeries($completedOrders, 'total', 7, 'updated_at');
+        $statusMix = $this->buildStatusBreakdownSeries($orders, [
+            'placed',
+            'confirmed',
+            'preparing',
+            'ready',
+            'out_for_delivery',
+            'completed',
+            'cancelled',
+        ]);
+
+        return $this->renderOperationalDashboard(
+            'admin',
+            'Admin Dashboard',
+            'Manage the canteen workspace, monitor sales and keep operations aligned.',
+            $this->managerStats(),
+            $this->managerTables(),
+            [],
+            [
+                $this->buildLineChart(
+                    'admin-revenue-trend',
+                    'Revenue trend',
+                    'Completed orders across the last 7 days',
+                    $revenueTrend['labels'],
+                    $revenueTrend['values'],
+                    'Revenue',
+                    ['column_class' => 'col-lg-7', 'format' => 'currency']
+                ),
+                $this->buildDoughnutChart(
+                    'admin-status-mix',
+                    'Order lifecycle',
+                    'How orders are moving through the business',
+                    $statusMix['labels'],
+                    $statusMix['values'],
+                    $statusMix['colors'],
+                    ['column_class' => 'col-lg-5']
+                ),
+            ],
+            [
+                ['label' => 'Revenue today', 'value' => moneyFormat((float) (clone $completedOrders)->whereDate('updated_at', today())->sum('total')), 'note' => 'Completed orders only'],
+                ['label' => 'Open orders', 'value' => (clone $orders)->whereNotIn('status', ['completed', 'cancelled'])->count(), 'note' => 'Need attention'],
+                ['label' => 'Active staff', 'value' => User::query()->where('business_id', currentBusinessId())->whereIn('role', ['staff', 'kitchen_staff'])->count(), 'note' => 'Shift coverage'],
+            ],
+            [
+                ['label' => 'Orders', 'route' => 'manager.orders.index', 'icon' => 'fa-solid fa-clipboard-list', 'variant' => 'btn-warning'],
+                ['label' => 'Reports', 'route' => 'manager.reports.index', 'icon' => 'fa-solid fa-chart-pie', 'variant' => 'btn-outline-light'],
+                ['label' => 'Products', 'route' => 'admin.products.index', 'icon' => 'fa-solid fa-utensils', 'variant' => 'btn-outline-light'],
+                ['label' => 'Inventory', 'route' => 'admin.inventory.index', 'icon' => 'fa-solid fa-boxes-stacked', 'variant' => 'btn-outline-light'],
             ]
         );
     }

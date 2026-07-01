@@ -106,6 +106,12 @@ class RegisterController extends Controller
         ]);
 
         toastr()->success('Registration successful! You can now log in.', ['timeOut' => 5000], 'Welcome!');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Welcome!',
+            'message' => 'Registration successful! You can now log in.',
+            'ok_text' => 'OK',
+        ]);
 
         $intendedRoute = $this->pullIntendedRoute($user);
 

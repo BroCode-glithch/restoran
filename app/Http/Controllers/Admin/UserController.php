@@ -57,6 +57,12 @@ class UserController extends Controller
         ]);
 
         toastr()->success('User updated.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'User updated.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.users.index');
     }

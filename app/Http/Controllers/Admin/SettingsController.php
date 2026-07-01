@@ -48,6 +48,12 @@ class SettingsController extends Controller
         ]);
 
         toastr()->success('Settings updated successfully.', ['timeOut' => 3000], 'Saved');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Saved',
+            'message' => 'Settings updated successfully.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('admin.settings.index');
     }

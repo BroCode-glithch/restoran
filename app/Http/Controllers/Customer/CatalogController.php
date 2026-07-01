@@ -43,6 +43,12 @@ class CatalogController extends Controller
         $cartService->add($product, $quantity);
 
         toastr()->success($product->name . ' added to cart.', ['timeOut' => 3000], 'Cart updated');
+        session()->flash('swal', [
+            'type' => 'success',
+            'title' => 'Cart updated',
+            'message' => $product->name . ' added to cart.',
+            'ok_text' => 'OK',
+        ]);
 
         return redirect()->route('catalog.index');
     }
