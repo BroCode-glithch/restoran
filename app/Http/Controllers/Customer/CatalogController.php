@@ -53,6 +53,30 @@ class CatalogController extends Controller
         return redirect()->route('catalog.index');
     }
 
+    public function show(Product $product, CartService $cartService)
+    {
+        $this->authorizeProduct($product);
+
+        $product->load('category');
+
+        $relatedProducts = Product::query()
+            ->where('business_id', currentBusinessId())
+            ->where('availability', true)
+            ->where('id', '!=', $product->id)
+            ->when($product->category_id, function ($query) use ($product) {
+                $query->where('category_id', $product->category_id);
+            })
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('customer.catalog.show', [
+            'product' => $product,
+            'relatedProducts' => $relatedProducts,
+            'cartCount' => $cartService->count(),
+        ]);
+    }
+
     protected function authorizeProduct(Product $product)
     {
         if ($product->business_id !== currentBusinessId()) {

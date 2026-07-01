@@ -11,6 +11,7 @@ use App\Models\Settings;
 use App\Models\SystemLog;
 use App\Models\User;
 use App\Services\CartService;
+use App\Services\WalletService;
 use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
@@ -20,7 +21,7 @@ class DashboardController extends Controller
         return redirect()->route(auth()->user()->dashboardRoute());
     }
 
-    public function customer(CartService $cartService)
+    public function customer(CartService $cartService, WalletService $walletService)
     {
         $businessId = currentBusinessId();
         $user = auth()->user();
@@ -62,6 +63,7 @@ class DashboardController extends Controller
                 ['label' => 'Open Orders', 'value' => (clone $orderQuery)->whereNotIn('status', ['completed', 'cancelled'])->count(), 'note' => 'Active on your account', 'icon' => 'fa-solid fa-receipt'],
                 ['label' => 'Completed', 'value' => (clone $orderQuery)->where('status', 'completed')->count(), 'note' => 'Delivered or picked up', 'icon' => 'fa-solid fa-circle-check'],
                 ['label' => 'Cart Items', 'value' => $cartService->count(), 'note' => 'Ready to checkout', 'icon' => 'fa-solid fa-cart-shopping'],
+                ['label' => 'Wallet Balance', 'value' => moneyFormat($walletService->balanceFor($user)), 'note' => 'Top up and pay instantly', 'icon' => 'fa-solid fa-wallet'],
                 ['label' => 'Preferred Channel', 'value' => 'WhatsApp', 'note' => 'Quick updates enabled', 'icon' => 'fa-brands fa-whatsapp'],
             ],
             'insights' => [
@@ -92,6 +94,7 @@ class DashboardController extends Controller
             'actions' => [
                 ['label' => 'Browse Menu', 'route' => 'catalog.index', 'icon' => 'fa-solid fa-bowl-food', 'variant' => 'btn-warning'],
                 ['label' => 'Open Cart', 'route' => 'cart.index', 'icon' => 'fa-solid fa-cart-shopping', 'variant' => 'btn-outline-light'],
+                ['label' => 'Open Wallet', 'route' => 'wallet.index', 'icon' => 'fa-solid fa-wallet', 'variant' => 'btn-outline-light'],
                 ['label' => 'View Orders', 'route' => 'orders.index', 'icon' => 'fa-solid fa-receipt', 'variant' => 'btn-outline-light'],
             ],
             'cards' => $featuredProducts->map(function ($product) {
@@ -102,7 +105,8 @@ class DashboardController extends Controller
                     'meta' => $product->type,
                     'price' => $product->price,
                     'image' => mediaUrl($product->image, asset('assets/img/menu-1.jpg')),
-                    'action_route' => 'catalog.index',
+                    'action_url' => route('catalog.show', $product),
+                    'action_label' => 'View details',
                 ];
             })->toArray(),
             'tables' => [

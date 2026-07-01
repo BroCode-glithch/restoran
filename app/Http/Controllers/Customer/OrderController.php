@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\WalletTransaction;
 use App\Services\CartService;
+use App\Services\KorapayService;
 use App\Services\OrderWorkflowService;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -33,13 +36,93 @@ class OrderController extends Controller
         return view('customer.orders.index', compact('orders', 'user', 'perPage'));
     }
 
-    public function show(Order $order)
+    public function show(Request $request, Order $order)
     {
         $this->authorizeOrder($order);
 
         $order->load(['items.product', 'statusHistories.actor']);
 
-        return view('customer.orders.show', compact('order'));
+        if ($order->payment_method === 'korapay' && $request->filled('reference') && $order->payment_status !== 'paid') {
+            session()->flash('swal', [
+                'type' => 'info',
+                'title' => 'Payment in progress',
+                'message' => 'Korapay returned your order reference. We are waiting for the payment confirmation.',
+                'ok_text' => 'OK',
+            ]);
+        }
+
+        $kitchenContact = getSetting('notifications.kitchen_whatsapp_number', getSetting('contact.whatsapp_number'));
+        $kitchenWhatsappMessage = 'Greetings! New order alert for kitchen: ' . $order->order_number . ' | Customer: ' . $order->customer_name . ' | Status: ' . orderStatusLabel($order->status) . ' | Total: ' . moneyFormat($order->total, $order->currency);
+
+        return view('customer.orders.show', compact('order', 'kitchenContact', 'kitchenWhatsappMessage'));
+    }
+
+    public function korapayCheckout(Order $order, KorapayService $korapayService)
+    {
+        $this->authorizeOrder($order);
+
+        if ($order->payment_method !== 'korapay') {
+            return redirect()->route('orders.show', $order);
+        }
+
+        $checkoutUrl = $korapayService->initializeCheckout(
+            $order,
+            route('orders.show', $order),
+            route('payments.korapay.webhook')
+        );
+
+        if (!$checkoutUrl) {
+            toastr()->error('Korapay checkout could not be started. Check your Korapay keys in settings.', ['timeOut' => 4000], 'Checkout unavailable');
+            session()->flash('swal', [
+                'type' => 'error',
+                'title' => 'Checkout unavailable',
+                'message' => 'Korapay checkout could not be started. Check your Korapay keys in settings.',
+                'ok_text' => 'OK',
+            ]);
+
+            return redirect()->route('orders.show', $order);
+        }
+
+        return redirect()->away($checkoutUrl);
+    }
+
+    public function korapayWebhook(Request $request, WalletService $walletService)
+    {
+        $payload = $request->all();
+        $event = data_get($payload, 'event');
+
+        if ($event !== 'charge.success') {
+            return response()->json(['ok' => true]);
+        }
+
+        $reference = data_get($payload, 'data.payment_reference') ?: data_get($payload, 'data.reference');
+
+        if (empty($reference)) {
+            return response()->json(['ok' => false, 'message' => 'Missing reference'], 422);
+        }
+
+        $order = Order::query()->where('payment_reference', $reference)->first();
+
+        if ($order) {
+            if ($order->payment_status !== 'paid') {
+                $order->payment_status = 'paid';
+                $order->save();
+            }
+
+            return response()->json(['ok' => true]);
+        }
+
+        $walletTransaction = WalletTransaction::query()->where('reference', $reference)->first();
+
+        if (!$walletTransaction) {
+            return response()->json(['ok' => false, 'message' => 'Payment target not found'], 404);
+        }
+
+        if ($walletTransaction->status !== 'completed') {
+            $walletService->completeTopup($walletTransaction);
+        }
+
+        return response()->json(['ok' => true]);
     }
 
     public function store(Request $request, CartService $cartService, OrderWorkflowService $orderWorkflowService)
@@ -64,18 +147,22 @@ class OrderController extends Controller
             'delivery_type' => ['required', 'in:pickup,delivery'],
             'delivery_address' => ['nullable', 'string', 'max:1000'],
             'notes' => ['nullable', 'string', 'max:1000'],
-            'payment_method' => ['required', 'in:demo_card,bank_transfer,cash_on_delivery'],
+            'payment_method' => ['required', 'in:korapay,wallet'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
         ]);
 
         $order = $orderWorkflowService->placeOrder($validated, $items, auth()->user());
         $cartService->clear();
 
-        toastr()->success('Order placed successfully.', ['timeOut' => 3000], 'Order received');
+        if (($validated['payment_method'] ?? '') === 'korapay') {
+            return redirect()->route('orders.korapay.checkout', $order);
+        }
+
+        toastr()->success('Order paid from wallet balance.', ['timeOut' => 3000], 'Order received');
         session()->flash('swal', [
             'type' => 'success',
             'title' => 'Order received',
-            'message' => 'Order placed successfully.',
+            'message' => 'Order paid from wallet balance.',
             'ok_text' => 'OK',
         ]);
 

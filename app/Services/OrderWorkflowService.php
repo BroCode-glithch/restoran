@@ -8,8 +8,10 @@ use App\Models\OrderStatusHistory;
 use App\Models\SystemLog;
 use App\Notifications\OrderPlacedNotification;
 use App\Notifications\OrderStatusUpdatedNotification;
+use App\Services\WalletService;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 
 class OrderWorkflowService
@@ -19,14 +21,13 @@ class OrderWorkflowService
         return DB::transaction(function () use ($payload, $cartItems, $customer) {
             $businessId = app(BusinessContext::class)->currentId();
             $subtotal = 0;
-            $paymentMethod = isset($payload['payment_method']) ? $payload['payment_method'] : 'demo_card';
-            $paymentMethod = in_array($paymentMethod, ['demo_card', 'bank_transfer', 'cash_on_delivery'], true)
+            $paymentMethod = isset($payload['payment_method']) ? $payload['payment_method'] : 'korapay';
+            $paymentMethod = in_array($paymentMethod, ['korapay', 'wallet'], true)
                 ? $paymentMethod
-                : 'demo_card';
-            $isDemoPaid = $paymentMethod === 'demo_card';
+                : 'korapay';
             $paymentReference = isset($payload['payment_reference']) && trim((string) $payload['payment_reference']) !== ''
                 ? trim((string) $payload['payment_reference'])
-                : ($isDemoPaid ? 'DEMO-' . Str::upper(Str::random(8)) : null);
+                : ($paymentMethod === 'wallet' ? 'WLT-' . Str::upper(Str::random(8)) : 'KORA-' . Str::upper(Str::random(8)));
 
             foreach ($cartItems as $item) {
                 $subtotal += ((float) $item['price']) * ((int) $item['quantity']);
@@ -45,7 +46,7 @@ class OrderWorkflowService
                 'customer_phone' => $payload['customer_phone'],
                 'delivery_type' => $payload['delivery_type'],
                 'status' => 'placed',
-                'payment_status' => $isDemoPaid ? 'paid' : 'pending',
+                'payment_status' => 'pending',
                 'payment_method' => $paymentMethod,
                 'currency' => getSetting('operations.currency', 'NGN'),
                 'subtotal' => $subtotal,
@@ -91,6 +92,16 @@ class OrderWorkflowService
                     'status' => 'placed',
                 ],
             ]);
+
+            if ($paymentMethod === 'wallet') {
+                if (!$customer) {
+                    throw ValidationException::withMessages([
+                        'payment_method' => 'Wallet payment requires a signed-in customer account.',
+                    ]);
+                }
+
+                app(WalletService::class)->payOrderFromWallet($order, $customer);
+            }
 
             try {
                 $this->notifyOrderPlaced($order, $customer);

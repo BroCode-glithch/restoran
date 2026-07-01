@@ -111,6 +111,7 @@ return [
             ['label' => 'Overview', 'route' => 'customer.dashboard', 'icon' => 'fa-solid fa-gauge'],
             ['label' => 'Menu', 'route' => 'catalog.index', 'icon' => 'fa-solid fa-bowl-food'],
             ['label' => 'Cart', 'route' => 'cart.index', 'icon' => 'fa-solid fa-cart-shopping'],
+            ['label' => 'Wallet', 'route' => 'wallet.index', 'icon' => 'fa-solid fa-wallet'],
             ['label' => 'Orders', 'route' => 'orders.index', 'icon' => 'fa-solid fa-receipt'],
         ],
         'staff' => [
@@ -161,6 +162,7 @@ return [
             ['label' => 'Home', 'route' => 'customer.dashboard', 'icon' => 'fa-solid fa-house'],
             ['label' => 'Menu', 'route' => 'catalog.index', 'icon' => 'fa-solid fa-bowl-food'],
             ['label' => 'Cart', 'route' => 'cart.index', 'icon' => 'fa-solid fa-cart-shopping'],
+            ['label' => 'Wallet', 'route' => 'wallet.index', 'icon' => 'fa-solid fa-wallet'],
             ['label' => 'Orders', 'route' => 'orders.index', 'icon' => 'fa-solid fa-receipt'],
             ['label' => 'Account', 'route' => 'dashboard', 'icon' => 'fa-solid fa-user'],
         ],

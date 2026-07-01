@@ -193,3 +193,29 @@ if (!function_exists('whatsappChatUrl')) {
         return 'https://wa.me/' . $phone . '?text=' . urlencode((string) $message);
     }
 }
+
+if (!function_exists('korapayCheckoutUrl')) {
+    function korapayCheckoutUrl($reference, $amount, $customerName = null, $customerEmail = null, $callbackUrl = null)
+    {
+        $baseUrl = rtrim((string) getSetting('integrations.korapay_base_url', 'https://checkout.korapay.com'), '/');
+
+        if ($baseUrl === '') {
+            return null;
+        }
+
+        $query = array_filter([
+            'reference' => $reference,
+            'amount' => $amount,
+            'currency' => getSetting('operations.currency', 'NGN'),
+            'customer_name' => $customerName,
+            'customer_email' => $customerEmail,
+            'public_key' => trim((string) getSetting('integrations.korapay_public_key')),
+            'callback_url' => $callbackUrl,
+            'return_url' => $callbackUrl,
+        ], function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        return $baseUrl . '?' . http_build_query($query);
+    }
+}

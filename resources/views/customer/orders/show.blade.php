@@ -78,9 +78,13 @@
                 );
             @endphp
 
-            @if($customerWhatsappUrl)
-                <a href="{{ $customerWhatsappUrl }}" target="_blank" rel="noopener" class="btn btn-success w-100 mt-3">
-                    <i class="fa-brands fa-whatsapp me-1"></i>Send WhatsApp update
+            @php
+                $kitchenWhatsappUrl = whatsappChatUrl($kitchenContact, $kitchenWhatsappMessage);
+            @endphp
+
+            @if($kitchenWhatsappUrl)
+                <a href="{{ $kitchenWhatsappUrl }}" target="_blank" rel="noopener" class="btn btn-success w-100 mt-3">
+                    <i class="fa-brands fa-whatsapp me-1"></i>Notify Kitchen on WhatsApp
                 </a>
             @endif
         </div>
@@ -105,6 +109,12 @@
                     Reference:
                     <span class="fw-semibold text-dark">{{ $order->payment_reference }}</span>
                 </div>
+            @endif
+
+            @if($order->payment_method === 'korapay' && $order->payment_status !== 'paid')
+                <a href="{{ route('orders.korapay.checkout', $order) }}" class="btn btn-primary w-100 mt-3">
+                    <i class="fa-solid fa-credit-card me-1"></i>Continue to Korapay Checkout
+                </a>
             @endif
         </div>
 

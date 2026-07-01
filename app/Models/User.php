@@ -88,6 +88,21 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'assigned_staff_id');
     }
 
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function walletTransactions()
+    {
+        return $this->hasManyThrough(WalletTransaction::class, Wallet::class);
+    }
+
+    public function walletBalance()
+    {
+        return $this->wallet ? (float) $this->wallet->balance : 0.0;
+    }
+
     public function dashboardRoute()
     {
         return roleDashboardRoute($this->role ?: 'customer');

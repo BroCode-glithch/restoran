@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Customer\CatalogController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\WalletController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FeatureFlagController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -78,6 +79,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/catalog', [CatalogController::class, 'index'])
         ->name('catalog.index')
         ->middleware('role:customer');
+    Route::get('/catalog/{product}', [CatalogController::class, 'show'])
+        ->name('catalog.show')
+        ->middleware('role:customer');
     Route::post('/catalog/{product}/add', [CatalogController::class, 'add'])
         ->name('catalog.add')
         ->middleware('role:customer');
@@ -103,6 +107,15 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:customer');
     Route::get('/orders/{order}', [OrderController::class, 'show'])
         ->name('orders.show')
+        ->middleware('role:customer');
+    Route::get('/orders/{order}/korapay/checkout', [OrderController::class, 'korapayCheckout'])
+        ->name('orders.korapay.checkout')
+        ->middleware('role:customer');
+    Route::get('/wallet', [WalletController::class, 'index'])
+        ->name('wallet.index')
+        ->middleware('role:customer');
+    Route::post('/wallet/topup', [WalletController::class, 'topUp'])
+        ->name('wallet.topup')
         ->middleware('role:customer');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])
         ->name('orders.status.update')

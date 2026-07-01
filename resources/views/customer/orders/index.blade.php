@@ -10,7 +10,7 @@
             <h1 class="fw-bold mb-2">Track every order from one timeline.</h1>
             <p class="mb-0 text-white-50">Customer orders, staff assignments and kitchen progress all live here.</p>
         </div>
-        <div class="col-lg-4 text-lg-end">
+        <div class="col-lg-4 text-lg-end d-flex flex-wrap gap-2 justify-content-lg-end">
             <a href="{{ route('catalog.index') }}" class="btn btn-outline-light btn-lg me-2">Browse Menu</a>
             <a href="{{ route('cart.index') }}" class="btn btn-warning btn-lg">Cart</a>
         </div>
@@ -69,7 +69,7 @@
                                 @php
                                     $customerWhatsappUrl = whatsappChatUrl(
                                         $order->customer_phone,
-                                        'Hello ' . $order->customer_name . ', your order ' . $order->order_number . ' is currently ' . orderStatusLabel($order->status) . '.'
+                                        'Hello ' . $order->customer_name . ', your order ' . $order->order_number . ' is currently ' . orderStatusLabel($order->status) . '. Thanks!'
                                     );
 
                                     $statusOptions = auth()->user()->canAccessRole('super_admin')

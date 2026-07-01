@@ -26,6 +26,24 @@ class SettingsController extends Controller
     {
         $businessId = currentBusinessId();
         $payload = $request->input('settings', []);
+        $user = $request->user();
+
+        if (!$user || !$user->isDeveloper()) {
+            $restrictedKeys = [
+                'integrations.stripe_public_key',
+                'integrations.stripe_secret_key',
+                'integrations.paystack_public_key',
+                'integrations.paystack_secret_key',
+                'integrations.resend_api_key',
+                'integrations.twilio_account_sid',
+                'integrations.twilio_auth_token',
+                'integrations.twilio_phone_number',
+            ];
+
+            foreach ($restrictedKeys as $restrictedKey) {
+                unset($payload[$restrictedKey]);
+            }
+        }
 
         if ($request->hasFile('branding_logo_file')) {
             $payload['branding.logo_url'] = $request->file('branding_logo_file')->store('branding', 'public');

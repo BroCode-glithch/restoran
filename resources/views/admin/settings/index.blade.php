@@ -13,6 +13,70 @@
     </div>
 </div>
 
+<style>
+    .settings-color-field .input-group-text {
+        background: rgba(254, 161, 22, 0.12);
+        border-color: rgba(15, 23, 43, 0.1);
+    }
+
+    .settings-color-swatch {
+        width: 42px;
+        min-width: 42px;
+        border: 0;
+        border-radius: 14px;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        background: transparent;
+    }
+
+    .settings-color-swatch::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+
+    .settings-color-swatch::-webkit-color-swatch {
+        border: 0;
+        border-radius: 14px;
+    }
+
+    .settings-dropzone {
+        border: 1px dashed rgba(15, 23, 43, 0.18);
+        background: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(255, 255, 255, 0.92));
+        border-radius: 22px;
+        padding: 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .settings-dropzone.is-dragover {
+        border-color: var(--ops-primary);
+        box-shadow: 0 16px 36px rgba(254, 161, 22, 0.12);
+        transform: translateY(-1px);
+    }
+
+    .settings-dropzone-preview {
+        width: 100%;
+        min-height: 180px;
+        border-radius: 18px;
+        object-fit: cover;
+        background: rgba(15, 23, 43, 0.04);
+    }
+
+    .settings-dropzone-file {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .settings-integration-keys {
+        background: rgba(15, 23, 43, 0.02);
+        border: 1px solid rgba(15, 23, 43, 0.08);
+        border-radius: 22px;
+        padding: 1rem;
+    }
+</style>
+
 <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="vstack gap-4">
     @csrf
     @method('PUT')
@@ -21,15 +85,55 @@
         <h4 class="mb-3">Branding</h4>
         <div class="row g-3">
             <div class="col-md-6"><input type="text" name="settings[branding.business_name]" class="form-control" placeholder="Business name" value="{{ old('settings.branding.business_name', $settings['branding.business_name'] ?? '') }}"></div>
-            <div class="col-md-3"><input type="text" name="settings[branding.primary_color]" class="form-control" placeholder="Primary color" value="{{ old('settings.branding.primary_color', $settings['branding.primary_color'] ?? '#FEA116') }}"></div>
-            <div class="col-md-3"><input type="text" name="settings[branding.secondary_color]" class="form-control" placeholder="Secondary color" value="{{ old('settings.branding.secondary_color', $settings['branding.secondary_color'] ?? '#0F172B') }}"></div>
+            @php
+                $primaryColor = old('settings.branding.primary_color', $settings['branding.primary_color'] ?? '#FEA116');
+                $secondaryColor = old('settings.branding.secondary_color', $settings['branding.secondary_color'] ?? '#0F172B');
+            @endphp
+            <div class="col-md-3">
+                <div class="input-group settings-color-field">
+                    <span class="input-group-text">Primary</span>
+                    <input type="color" class="form-control settings-color-swatch" data-color-target="primaryColorText" value="#FEA116" aria-label="Primary color picker">
+                    <input type="text" id="primaryColorText" name="settings[branding.primary_color]" class="form-control" placeholder="Hex, RGB or RGBA" value="{{ $primaryColor }}" data-color-preview="#primaryColorPreview">
+                </div>
+                <div id="primaryColorPreview" class="small text-muted mt-2">Preview</div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group settings-color-field">
+                    <span class="input-group-text">Secondary</span>
+                    <input type="color" class="form-control settings-color-swatch" data-color-target="secondaryColorText" value="#0F172B" aria-label="Secondary color picker">
+                    <input type="text" id="secondaryColorText" name="settings[branding.secondary_color]" class="form-control" placeholder="Hex, RGB or RGBA" value="{{ $secondaryColor }}" data-color-preview="#secondaryColorPreview">
+                </div>
+                <div id="secondaryColorPreview" class="small text-muted mt-2">Preview</div>
+            </div>
             <div class="col-md-6"><input type="text" name="settings[branding.font_family]" class="form-control" placeholder="Font family" value="{{ old('settings.branding.font_family', $settings['branding.font_family'] ?? '"Nunito", sans-serif') }}"></div>
-            <div class="col-md-6"><input type="text" name="settings[branding.logo_url]" class="form-control" placeholder="Logo URL or storage path" value="{{ old('settings.branding.logo_url', $settings['branding.logo_url'] ?? '') }}"></div>
-            <div class="col-md-6"><input type="file" name="branding_logo_file" class="form-control"></div>
-            <div class="col-md-6"><input type="file" name="branding_favicon_file" class="form-control"></div>
-            @if(!empty($settings['branding.logo_url'] ?? null))
-                <div class="col-12"><img src="{{ mediaUrl($settings['branding.logo_url']) }}" alt="Logo preview" style="width:96px;height:96px;object-fit:cover;" class="rounded-4 border"></div>
-            @endif
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Logo upload</label>
+                <div class="settings-dropzone position-relative" data-dropzone="brandingLogo">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img id="brandingLogoPreview" src="{{ !empty($settings['branding.logo_url'] ?? null) ? mediaUrl($settings['branding.logo_url']) : asset('assets/img/hero.png') }}" alt="Logo preview" class="settings-dropzone-preview" style="max-width: 180px; width: 180px; height: 180px;">
+                        <div>
+                            <div class="fw-bold mb-1">Drag and drop logo</div>
+                            <div class="text-muted small">Or click to choose a file. PNG, JPG or SVG.</div>
+                            <div class="small text-muted mt-2" id="brandingLogoName">{{ !empty($settings['branding.logo_url'] ?? null) ? basename($settings['branding.logo_url']) : 'No file selected' }}</div>
+                        </div>
+                    </div>
+                    <input type="file" name="branding_logo_file" id="brandingLogoInput" accept="image/*" class="settings-dropzone-file">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Favicon upload</label>
+                <div class="settings-dropzone position-relative" data-dropzone="brandingFavicon">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img id="brandingFaviconPreview" src="{{ !empty($settings['branding.favicon_url'] ?? null) ? mediaUrl($settings['branding.favicon_url']) : asset('favicon.ico') }}" alt="Favicon preview" class="settings-dropzone-preview" style="max-width: 96px; width: 96px; height: 96px;">
+                        <div>
+                            <div class="fw-bold mb-1">Drag and drop favicon</div>
+                            <div class="text-muted small">Or click to choose a file. PNG or ICO.</div>
+                            <div class="small text-muted mt-2" id="brandingFaviconName">{{ !empty($settings['branding.favicon_url'] ?? null) ? basename($settings['branding.favicon_url']) : 'No file selected' }}</div>
+                        </div>
+                    </div>
+                    <input type="file" name="branding_favicon_file" id="brandingFaviconInput" accept="image/*,.ico" class="settings-dropzone-file">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -114,7 +218,37 @@
                 <input class="form-check-input" type="checkbox" name="settings[integrations.twilio_enabled]" value="1" id="twilio_enabled" {{ ($settings['integrations.twilio_enabled'] ?? '0') === '1' ? 'checked' : '' }}>
                 <label class="form-check-label" for="twilio_enabled">Twilio</label>
             </div>
+            <div class="col-md-3 form-check ps-5">
+                <input type="hidden" name="settings[integrations.korapay_enabled]" value="0">
+                <input class="form-check-input" type="checkbox" name="settings[integrations.korapay_enabled]" value="1" id="korapay_enabled" {{ ($settings['integrations.korapay_enabled'] ?? '1') === '1' ? 'checked' : '' }}>
+                <label class="form-check-label" for="korapay_enabled">Korapay</label>
+            </div>
         </div>
+
+        @if(auth()->user() && auth()->user()->isDeveloper())
+            <div class="settings-integration-keys mt-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                    <div>
+                        <h5 class="mb-1">Developer credentials</h5>
+                        <p class="text-muted mb-0">Add the keys here. Admins can only toggle providers on or off.</p>
+                    </div>
+                    <span class="badge bg-dark text-white">Developer only</span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6"><input type="text" name="settings[integrations.stripe_public_key]" class="form-control" placeholder="Stripe public key" value="{{ old('settings.integrations.stripe_public_key', $settings['integrations.stripe_public_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="password" name="settings[integrations.stripe_secret_key]" class="form-control" placeholder="Stripe secret key" value="{{ old('settings.integrations.stripe_secret_key', $settings['integrations.stripe_secret_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="text" name="settings[integrations.paystack_public_key]" class="form-control" placeholder="Paystack public key" value="{{ old('settings.integrations.paystack_public_key', $settings['integrations.paystack_public_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="password" name="settings[integrations.paystack_secret_key]" class="form-control" placeholder="Paystack secret key" value="{{ old('settings.integrations.paystack_secret_key', $settings['integrations.paystack_secret_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="password" name="settings[integrations.resend_api_key]" class="form-control" placeholder="Resend API key" value="{{ old('settings.integrations.resend_api_key', $settings['integrations.resend_api_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="text" name="settings[integrations.twilio_account_sid]" class="form-control" placeholder="Twilio account SID" value="{{ old('settings.integrations.twilio_account_sid', $settings['integrations.twilio_account_sid'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="password" name="settings[integrations.twilio_auth_token]" class="form-control" placeholder="Twilio auth token" value="{{ old('settings.integrations.twilio_auth_token', $settings['integrations.twilio_auth_token'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="text" name="settings[integrations.twilio_phone_number]" class="form-control" placeholder="Twilio phone number" value="{{ old('settings.integrations.twilio_phone_number', $settings['integrations.twilio_phone_number'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="text" name="settings[integrations.korapay_public_key]" class="form-control" placeholder="Korapay public key" value="{{ old('settings.integrations.korapay_public_key', $settings['integrations.korapay_public_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="password" name="settings[integrations.korapay_secret_key]" class="form-control" placeholder="Korapay secret key" value="{{ old('settings.integrations.korapay_secret_key', $settings['integrations.korapay_secret_key'] ?? '') }}"></div>
+                    <div class="col-md-6"><input type="text" name="settings[integrations.korapay_base_url]" class="form-control" placeholder="Korapay checkout URL" value="{{ old('settings.integrations.korapay_base_url', $settings['integrations.korapay_base_url'] ?? 'https://checkout.korapay.com') }}"></div>
+                </div>
+            </div>
+        @endif
     </div>
 
     <div class="ops-setting-card p-4 mb-4">
@@ -136,4 +270,124 @@
         <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
     </div>
 </form>
+
+@push('scripts')
+<script>
+    (function () {
+        function isValidColor(value) {
+            var test = document.createElement('div');
+            test.style.color = '';
+            test.style.color = value;
+            return test.style.color !== '';
+        }
+
+        function updateColorField(textInput, swatchInput, previewSelector) {
+            if (!textInput || !swatchInput) {
+                return;
+            }
+
+            var preview = previewSelector ? document.querySelector(previewSelector) : null;
+
+            function apply(value) {
+                if (!value) {
+                    return;
+                }
+
+                if (isValidColor(value)) {
+                    if (/^rgba?\(/i.test(value.trim()) || /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value.trim())) {
+                        swatchInput.style.backgroundColor = value;
+                    }
+                    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value.trim())) {
+                        swatchInput.value = value;
+                    }
+                    if (preview) {
+                        preview.style.color = value;
+                        preview.textContent = 'Preview: ' + value;
+                    }
+                }
+            }
+
+            apply(textInput.value);
+
+            textInput.addEventListener('input', function () {
+                apply(textInput.value);
+            });
+
+            swatchInput.addEventListener('input', function () {
+                textInput.value = swatchInput.value;
+                apply(textInput.value);
+            });
+        }
+
+        function bindDropzone(dropzoneSelector, inputSelector, previewSelector, nameSelector) {
+            var dropzone = document.querySelector(dropzoneSelector);
+            var input = document.querySelector(inputSelector);
+            var preview = document.querySelector(previewSelector);
+            var nameNode = document.querySelector(nameSelector);
+
+            if (!dropzone || !input || !preview) {
+                return;
+            }
+
+            var activate = function (file) {
+                if (!file) {
+                    return;
+                }
+
+                if (file.type && file.type.indexOf('image/') !== 0 && file.type !== 'image/x-icon') {
+                    return;
+                }
+
+                input.files = new DataTransfer().files;
+                var transfer = new DataTransfer();
+                transfer.items.add(file);
+                input.files = transfer.files;
+
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    preview.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                if (nameNode) {
+                    nameNode.textContent = file.name;
+                }
+            };
+
+            dropzone.addEventListener('dragover', function (event) {
+                event.preventDefault();
+                dropzone.classList.add('is-dragover');
+            });
+
+            dropzone.addEventListener('dragleave', function () {
+                dropzone.classList.remove('is-dragover');
+            });
+
+            dropzone.addEventListener('drop', function (event) {
+                event.preventDefault();
+                dropzone.classList.remove('is-dragover');
+                activate(event.dataTransfer.files[0]);
+            });
+
+            input.addEventListener('change', function () {
+                activate(input.files[0]);
+            });
+        }
+
+        updateColorField(
+            document.getElementById('primaryColorText'),
+            document.querySelector('[data-color-target="primaryColorText"]'),
+            '#primaryColorPreview'
+        );
+        updateColorField(
+            document.getElementById('secondaryColorText'),
+            document.querySelector('[data-color-target="secondaryColorText"]'),
+            '#secondaryColorPreview'
+        );
+
+        bindDropzone('[data-dropzone="brandingLogo"]', '#brandingLogoInput', '#brandingLogoPreview', '#brandingLogoName');
+        bindDropzone('[data-dropzone="brandingFavicon"]', '#brandingFaviconInput', '#brandingFaviconPreview', '#brandingFaviconName');
+    }());
+</script>
+@endpush
 @endsection

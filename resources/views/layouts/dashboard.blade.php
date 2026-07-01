@@ -65,6 +65,7 @@
     $navItems = dashboardNavigation($role);
     $bottomNav = dashboardBottomNavigation($role);
     $unreadNotifications = $user ? $user->unreadNotifications()->count() : 0;
+    $cartCount = $user && $role === 'customer' ? app(\App\Services\CartService::class)->count() : 0;
     $businessName = getSetting('branding.business_name', getSetting('site_title', config('app.name')));
     $currency = getSetting('operations.currency', 'NGN');
     $logoUrl = mediaUrl(getSetting('branding.logo_url'), asset('assets/img/hero.png'));
@@ -103,6 +104,9 @@
                     <small class="text-muted d-block mb-1">Signed in as</small>
                     <div class="fw-semibold">{{ $user->name }}</div>
                     <div class="small text-muted text-truncate">{{ $user->email }}</div>
+                    @if($role === 'customer')
+                        <div class="small text-muted mt-2">Wallet balance: <strong>{{ moneyFormat($user->walletBalance(), $currency) }}</strong></div>
+                    @endif
                 </div>
             @endif
         </div>
@@ -194,9 +198,12 @@
     @if(!empty($bottomNav))
         <nav class="ops-bottom-nav">
             @foreach($bottomNav as $item)
-                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route'], $item['route'] . '.*') ? 'active' : '' }}">
+                <a href="{{ route($item['route']) }}" class="{{ request()->routeIs($item['route'], $item['route'] . '.*') ? 'active' : '' }} position-relative">
                     <div class="mb-1"><i class="{{ $item['icon'] }}"></i></div>
                     <div>{{ $item['label'] }}</div>
+                    @if($item['route'] === 'cart.index' && $cartCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $cartCount }}</span>
+                    @endif
                 </a>
             @endforeach
         </nav>

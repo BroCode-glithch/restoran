@@ -103,8 +103,8 @@
                             @endif
                         </div>
                         <p class="text-muted flex-grow-1 mb-3">{{ $card['description'] }}</p>
-                        @if(isset($card['action_route']))
-                            <a href="{{ route($card['action_route']) }}" class="btn btn-primary w-100">
+                        @if(isset($card['action_url']) || isset($card['action_route']))
+                            <a href="{{ $card['action_url'] ?? route($card['action_route']) }}" class="btn btn-primary w-100">
                                 {{ $card['action_label'] ?? 'Open' }}
                             </a>
                         @endif
